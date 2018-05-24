@@ -1,2 +1,2 @@
-# deepcolvar
-Collective variables by deep learning
+# anncolvar
+Collective variables by artificial neural networks
