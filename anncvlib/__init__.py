@@ -234,7 +234,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "l1r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
       for j in range(layer2):
-        toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j])
+        toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,0])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[2].get_weights()[1]>0.0:
@@ -313,7 +313,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "l2r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
       for j in range(layer2):
-        toprint = toprint + "%0.5f," % (codecvs.layers[3].get_weights()[0][j])
+        toprint = toprint + "%0.5f," % (codecvs.layers[3].get_weights()[0][j,0])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[2].get_weights()[1]>0.0:
@@ -426,7 +426,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "l3r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
       for j in range(layer2):
-        toprint = toprint + "%0.5f," % (codecvs.layers[4].get_weights()[0][j])
+        toprint = toprint + "%0.5f," % (codecvs.layers[4].get_weights()[0][j,0])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       #for i in range(encdim):
@@ -437,5 +437,5 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = "PRINT ARG=l4r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     ofile.close()
-  return codecvs, np.corrcoef(vec1,vec2)[0,1]
+  return codecvs, np.corrcoef(cvs,coded_cvs[:,0])[0,1]
 
