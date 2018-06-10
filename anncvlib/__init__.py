@@ -15,8 +15,7 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
                            shuffle=1, layers=2, layer1=256, layer2=256, layer3=256,
                            actfun1='sigmoid', actfun2='sigmoid', actfun2='sigmoid',
                            optim='adam', loss='mean_squared_error', epochs=100, batch=0,
-                           lowfilename='', lowfiletype=0, highfilename='', highfiletype=0,
-                           ofilename='', modelfile='', plumedfile=''):
+                           ofilename='', ofiletype=0, modelfile='', plumedfile=''):
   try:
     traj = md.load(infilename, top=intopname)
   except:
@@ -100,6 +99,7 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
   if shuffle == 1:
     np.random.shuffle(indexes)
   training_set, testing_set = traj2[indexes[:-testsize],:]/maxbox, traj2[indexes[-testsize:],:]/maxbox
+  training_cvs, testing_cvs = cvs[indexes[:-testsize],:], cvs[indexes[-testsize:],:]
   
   # (Deep) learning  
   input_coord = krs.layers.Input(shape=(trajsize[1]*3,))
@@ -109,149 +109,66 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
     encoded = krs.layers.Dense(layer3, activation=actfun3, use_bias=True)(encoded)
   if layers == 3:
     encoded = krs.layers.Dense(layer2, activation=actfun2, use_bias=True)(encoded)
-  encoded = krs.layers.Dense(encdim, activation='linear', use_bias=True)(encoded)
-  if layers == 3:
-    decoded = krs.layers.Dense(layer2, activation=actfun2, use_bias=True)(encoded)
-    decoded = krs.layers.Dense(layer1, activation=actfun1, use_bias=True)(decoded)
-  else:
-    decoded = krs.layers.Dense(layer1, activation=actfun1, use_bias=True)(encoded)
-  decoded = krs.layers.Dense(trajsize[1]*3, activation='linear', use_bias=True)(decoded)
-  autoencoder = krs.models.Model(input_coord, decoded)
-  
-  encoder = krs.models.Model(input_coord, encoded)
-  
-  encoded_input = krs.layers.Input(shape=(encdim,))
-  if layers == 2:
-    decoder_layer1 = autoencoder.layers[-2]
-    decoder_layer2 = autoencoder.layers[-1]
-    decoder = krs.models.Model(encoded_input, decoder_layer2(decoder_layer1(encoded_input)))
-  if layers == 3:
-    decoder_layer1 = autoencoder.layers[-3]
-    decoder_layer2 = autoencoder.layers[-2]
-    decoder_layer3 = autoencoder.layers[-1]
-    decoder = krs.models.Model(encoded_input, decoder_layer3(decoder_layer2(decoder_layer1(encoded_input))))
-  
-  autoencoder.compile(optimizer=optim, loss=loss)
+  encoded = krs.layers.Dense(1, activation='linear', use_bias=True)(encoded)
+  codecvs = krs.models.Model(input_coord, encoded)
+  codecvs.compile(optimizer=optim, loss=loss)
   
   if batch>0:
-    autoencoder.fit(training_set, training_set,
-                    epochs=epochs,
-                    batch_size=batch,
-                    validation_data=(testing_set, testing_set))
+    codecvs.fit(training_set, training_cvs,
+                epochs=epochs,
+                batch_size=batch,
+                validation_data=(testing_set, testing_cvs))
   else:
-    autoencoder.fit(training_set, training_set,
-                    epochs=epochs,
-                    validation_data=(testing_set, testing_set))
+    codecvs.fit(training_set, training_cvs,
+                epochs=epochs,
+                validation_data=(testing_set, testing_cvs))
   
   # Encoding and decoding the trajectory
-  encoded_coords = encoder.predict(traj2/maxbox)
-  decoded_coords = decoder.predict(encoded_coords)
+  coded_cvs = codecvs.predict(traj2/maxbox)
   
   # Calculating Pearson correlation coefficient
-  vec1 = traj2.reshape((trajsize[0]*trajsize[1]*3))
-  vec2 = decoded_coords.reshape((trajsize[0]*trajsize[1]*3))*maxbox
   print()
-  print("Pearson correlation coefficient for encoded-decoded trajectory is %f" % np.corrcoef(vec1,vec2)[0,1])
+  print("Pearson correlation coefficient for original and coded cvs is %f" % np.corrcoef(cvs,coded_cvs)[0,1])
   print()
   
-  #training_set, testing_set = traj2[indexes[:-testsize],:]/maxbox, traj2[indexes[-testsize:],:]/maxbox
-  vec1 = traj2[indexes[:-testsize],:].reshape(((trajsize[0]-testsize)*trajsize[1]*3))
-  vec2 = decoded_coords[indexes[:-testsize],:].reshape(((trajsize[0]-testsize)*trajsize[1]*3))*maxbox
-  print("Pearson correlation coefficient for encoded-decoded training set is %f" % np.corrcoef(vec1,vec2)[0,1])
+  print("Pearson correlation coefficient for original and coded cvs in training set is %f" % np.corrcoef(training_cvs,coded_cvs[indexes[:-testsize],:])[0,1])
   print()
   
-  vec1 = traj2[indexes[-testsize:],:].reshape((testsize*trajsize[1]*3))
-  vec2 = decoded_coords[indexes[-testsize:],:].reshape((testsize*trajsize[1]*3))*maxbox
-  print("Pearson correlation coefficient for encoded-decoded testing set is %f" % np.corrcoef(vec1,vec2)[0,1])
-  print() 
+  print("Pearson correlation coefficient for original and coded cvs in testing set is %f" % np.corrcoef(testing_cvs,coded_cvs[indexes[-testsize:],:])[0,1])
+  print()
   
   # Generating low-dimensional output
-  if lowfiletype > 0:
-    print("Writing low-dimensional embeddings into %s" % lowfilename)
-    print()
-    if lowfiletype == 1:
-      ofile = open(lowfilename, "w")
+  if ofiletype > 0:
+    print("Writing collective variables into %s" % ofilename)
+    print("")
+    if ofiletype == 1:
+      ofile = open(ofilename, "w")
       ofile.write("# This file was created on %s\n" % dt.datetime.now().isoformat())
-      ofile.write("# Created by: encodetraj.py V 0.1\n")
+      ofile.write("# Created by: anncolvar V 0.1\n")
       sysargv = ""
       for item in sys.argv:
         sysargv = sysargv+item+" "
       ofile.write("# Command line: %s\n" % sysargv)
       ofile.write("@TYPE xy\n")
-      ofile.write("@ title \"Autoencoded trajectory\"\n")
-      ofile.write("@ xaxis  label \"low-dimensional embedding 1\"\n")
-      ofile.write("@ yaxis  label \"low-dimensional embedding 2\"\n")
+      ofile.write("@ title \"Coded CVs\"\n")
+      ofile.write("@ xaxis  label \"original CV\"\n")
+      ofile.write("@ yaxis  label \"coded CV\"\n")
       for i in range(trajsize[0]):
-        for j in range(encdim):
-          ofile.write("%f " % encoded_coords[i][j])
+        ofile.write("%f %f " % (coded_cvs[i],cvs[i]))
         typeofset = 'TE'
         if i in indexes[:-testsize]:
           typeofset = 'TR'
         ofile.write("%s \n" % typeofset)
       ofile.close()
-    if lowfiletype == 2:
-      ofile = open(lowfilename, "w")
+    if ofiletype == 2:
+      ofile = open(ofilename, "w")
       for i in range(trajsize[0]):
-        for j in range(encdim):
-          ofile.write("%f " % encoded_coords[i][j])
+        ofile.write("%f %f " % (coded_cvs[i],cvs[i]))
         typeofset = 'TE'
         if i in indexes[:-testsize]:
           typeofset = 'TR'
         ofile.write("%s \n" % typeofset)
       ofile.close()
-  
-  # Generating high-dimensional output
-  if highfiletype > 0:
-    print("Writing original and encoded-decoded coordinates into %s" % highfilename)
-    print()
-    if highfiletype == 1:
-      ofile = open(highfilename, "w")
-      ofile.write("# This file was created on %s\n" % dt.datetime.now().isoformat())
-      ofile.write("# Created by: encodetraj.py V 0.1\n")
-      sysargv = ''
-      for item in sys.argv:
-        sysargv = sysargv+item+' '
-      ofile.write("# Command line: %s\n" % sysargv)
-      ofile.write("@TYPE xy\n")
-      ofile.write("@ title \"Autoencoded and decoded trajectory\"\n")
-      ofile.write("@ xaxis  label \"original coordinate\"\n")
-      ofile.write("@ yaxis  label \"encoded and decoded coordinate\"\n")
-      for i in range(trajsize[0]):
-        for j in range(trajsize[1]*3):
-          ofile.write("%f %f " % (traj2[i][j], decoded_coords[i][j]*maxbox))
-          typeofset = 'TE'
-          if i in indexes[:-testsize]:
-            typeofset = 'TR'
-          ofile.write("%s \n" % typeofset)
-      ofile.close()
-    if highfiletype == 2:
-      ofile = open(highfilename, "w")
-      for i in range(trajsize[0]):
-        for j in range(trajsize[1]*3):
-          ofile.write("%f %f " % (traj2[i][j], decoded_coords[i][j]*maxbox))
-          typeofset = 'TE'
-          if i in indexes[:-testsize]:
-            typeofset = 'TR'
-          ofile.write("%s \n" % typeofset)
-      ofile.close()
-  
-  # Generating filtered trajectory
-  if filterfilename != '':
-    print("Writing encoded-decoded trajectory into %s" % filterfilename)
-    print()
-    decoded_coords2 = np.zeros((trajsize[0], trajsize[1], 3))
-    for i in range(trajsize[1]):
-      decoded_coords2[:,i,0] = decoded_coords[:,3*i]*maxbox
-      decoded_coords2[:,i,1] = decoded_coords[:,3*i+1]*maxbox
-      decoded_coords2[:,i,2] = decoded_coords[:,3*i+2]*maxbox
-    traj.xyz = decoded_coords2
-    traj.save_xtc(filterfilename)
-  
-  # Saving a plot of the model
-  if plotfiletype == 1:
-    print("Printing model into %s" % plotfilename)
-    print()
-    krs.utils.plot_model(autoencoder, show_shapes=True, to_file=plotfilename)
   
   # Saving the model
   if modelfile != '':
@@ -261,86 +178,28 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
     ofile.write("maxbox = %f\n" % maxbox)
     ofile.write("input_coord = krs.layers.Input(shape=(trajsize[1]*3,))\n")
     ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(input_coord)\n" % (layer1, actfun1))
+    if layers == 4:
+      ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(encoded)\n" % (layer2, actfun2))
+      ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(encoded)\n" % (layer3, actfun3))
     if layers == 3:
       ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(encoded)\n" % (layer2, actfun2))
     ofile.write("encoded = krs.layers.Dense(%i, activation='linear', use_bias=True)(encoded)\n" % encdim)
-    if layers == 3:
-      ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(encoded)\n" % (layer2, actfun2))
-    ofile.write("decoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(encoded)\n" % (layer1, actfun1))
-    ofile.write("decoded = krs.layers.Dense(trajsize[1]*3, activation='linear', use_bias=True)(decoded)\n")
-    ofile.write("autoencoder = krs.models.Model(input_coord, decoded)\n")
+    ofile.write("codecvs = krs.models.Model(input_coord, encoded)\n")
     ofile.close()
     print("Writing model weights and biases into %s_*.npy NumPy arrays" % modelfile)
     print()
     if layers == 2:
-      np.save(file=modelfile+"_1.npy", arr=autoencoder.layers[1].get_weights())
-      np.save(file=modelfile+"_2.npy", arr=autoencoder.layers[2].get_weights())
-      np.save(file=modelfile+"_3.npy", arr=autoencoder.layers[3].get_weights())
-      np.save(file=modelfile+"_4.npy", arr=autoencoder.layers[4].get_weights())
+      np.save(file=modelfile+"_1.npy", arr=codecvs.layers[1].get_weights())
+      np.save(file=modelfile+"_2.npy", arr=codecvs.layers[2].get_weights())
+    if layers == 3:
+      np.save(file=modelfile+"_1.npy", arr=codecvs.layers[1].get_weights())
+      np.save(file=modelfile+"_2.npy", arr=codecvs.layers[2].get_weights())
+      np.save(file=modelfile+"_3.npy", arr=codecvs.layers[3].get_weights())
     else:
-      np.save(file=modelfile+"_1.npy", arr=autoencoder.layers[1].get_weights())
-      np.save(file=modelfile+"_2.npy", arr=autoencoder.layers[2].get_weights())
-      np.save(file=modelfile+"_3.npy", arr=autoencoder.layers[3].get_weights())
-      np.save(file=modelfile+"_4.npy", arr=autoencoder.layers[4].get_weights())
-      np.save(file=modelfile+"_5.npy", arr=autoencoder.layers[5].get_weights())
-      np.save(file=modelfile+"_6.npy", arr=autoencoder.layers[6].get_weights())
-  
-  # Saving collective motions trajectories
-  if collectivefile != '':
-    if collectivefile[-4:] == '.xtc':
-      collectivefile = collectivefile[:-4]
-    traj = traj[:ncollective]
-    print("Writing collective motion into %s_1.xtc" % collectivefile)
-    print()
-    collective = np.zeros((ncollective, 3))
-    cvmin = np.amin(encoded_coords[:,0])
-    cvmax = np.amax(encoded_coords[:,0])
-    for i in range(ncollective):
-      collective[i,0] = cvmin+(cvmax-cvmin)*float(i)/float(ncollective-1)
-      collective[i,1] = np.mean(encoded_coords[:,1])
-      collective[i,2] = np.mean(encoded_coords[:,2])
-    collective2 = decoder.predict(collective)
-    collective3 = np.zeros((ncollective, trajsize[1], 3))
-    for i in range(trajsize[1]):
-      collective3[:,i,0] = collective2[:,3*i]*maxbox
-      collective3[:,i,1] = collective2[:,3*i+1]*maxbox
-      collective3[:,i,2] = collective2[:,3*i+2]*maxbox
-    traj.xyz = collective3
-    traj.save_xtc(collectivefile+"_1.xtc")
-    print("Writing collective motion into %s_2.xtc" % collectivefile)
-    print()
-    collective = np.zeros((ncollective, 3))
-    cvmin = np.amin(encoded_coords[:,1])
-    cvmax = np.amax(encoded_coords[:,1])
-    for i in range(ncollective):
-      collective[i,0] = np.mean(encoded_coords[:,0])
-      collective[i,1] = cvmin+(cvmax-cvmin)*float(i)/float(ncollective-1)
-      collective[i,2] = np.mean(encoded_coords[:,2])
-    collective2 = decoder.predict(collective)
-    collective3 = np.zeros((ncollective, trajsize[1], 3))
-    for i in range(trajsize[1]):
-      collective3[:,i,0] = collective2[:,3*i]*maxbox
-      collective3[:,i,1] = collective2[:,3*i+1]*maxbox
-      collective3[:,i,2] = collective2[:,3*i+2]*maxbox
-    traj.xyz = collective3
-    traj.save_xtc(collectivefile+"_2.xtc")
-    print("Writing collective motion into %s_3.xtc" % collectivefile)
-    print()
-    collective = np.zeros((ncollective, 3))
-    cvmin = np.amin(encoded_coords[:,2])
-    cvmax = np.amax(encoded_coords[:,2])
-    for i in range(args.ncollective):
-      collective[i,0] = np.mean(encoded_coords[:,0])
-      collective[i,1] = np.mean(encoded_coords[:,1])
-      collective[i,2] = cvmin+(cvmax-cvmin)*float(i)/float(ncollective-1)
-    collective2 = decoder.predict(collective)
-    collective3 = np.zeros((ncollective, trajsize[1], 3))
-    for i in range(trajsize[1]):
-      collective3[:,i,0] = collective2[:,3*i]*maxbox
-      collective3[:,i,1] = collective2[:,3*i+1]*maxbox
-      collective3[:,i,2] = collective2[:,3*i+2]*maxbox
-    traj.xyz = collective3
-    traj.save_xtc(collectivefile+"_3.xtc")
+      np.save(file=modelfile+"_1.npy", arr=codecvs.layers[1].get_weights())
+      np.save(file=modelfile+"_2.npy", arr=codecvs.layers[2].get_weights())
+      np.save(file=modelfile+"_3.npy", arr=codecvs.layers[3].get_weights())
+      np.save(file=modelfile+"_4.npy", arr=codecvs.layers[4].get_weights())
   
   if plumedfile != '':
     print("Writing Plumed input into %s" % plumedfile)
@@ -364,11 +223,11 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
           toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(3*trajsize[1]):
-          toprint = toprint + "%0.5f," % (autoencoder.layers[1].get_weights()[0][j,i])
+          toprint = toprint + "%0.5f," % (codecvs.layers[1].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
       for i in range(layer1):
-        onebias = autoencoder.layers[1].get_weights()[1][i]
+        onebias = codecvs.layers[1].get_weights()[1][i]
         if onebias>0.0:
           if actfun1 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
           elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
@@ -390,24 +249,19 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun1 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
         ofile.write("l1r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
-      for i in range(encdim):
-        toprint = "l2_%i: COMBINE ARG=" % (i+1)
-        for j in range(layer2):
-          toprint = toprint + "l1r_%i," % (j+1)
-        toprint = toprint[:-1] + " COEFFICIENTS="
-        for j in range(layer2):
-          toprint = toprint + "%0.5f," % (autoencoder.layers[2].get_weights()[0][j,i])
-        toprint = toprint[:-1] + " PERIODIC=NO\n"
-        ofile.write(toprint)
-      for i in range(encdim):
-        if autoencoder.layers[2].get_weights()[1][i]>0.0:
-          ofile.write("l2r_%i: MATHEVAL ARG=l2_%i FUNC=x+%0.5f PERIODIC=NO\n" % (i+1,i+1,autoencoder.layers[2].get_weights()[1][i]))
-        else:
-          ofile.write("l2r_%i: MATHEVAL ARG=l2_%i FUNC=x-%0.5f PERIODIC=NO\n" % (i+1,i+1,-autoencoder.layers[2].get_weights()[1][i]))
-      toprint = "PRINT ARG="
-      for i in range(encdim):
-        toprint = toprint + "l2r_%i," % (i+1)
-      toprint = toprint[:-1] + " STRIDE=100 FILE=COLVAR\n"
+      toprint = "l2: COMBINE ARG="
+      for j in range(layer2):
+        toprint = toprint + "l1r_%i," % (j+1)
+      toprint = toprint[:-1] + " COEFFICIENTS="
+      for j in range(layer2):
+        toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,i])
+      toprint = toprint[:-1] + " PERIODIC=NO\n"
+      ofile.write(toprint)
+      if codecvs.layers[2].get_weights()[1]>0.0:
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][i]))
+      else:
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][i]))
+      toprint = "PRINT ARG=l2r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==3:
       for i in range(layer1):
@@ -416,11 +270,11 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
           toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(3*trajsize[1]):
-          toprint = toprint + "%0.5f," % (autoencoder.layers[1].get_weights()[0][j,i])
+          toprint = toprint + "%0.5f," % (codecvs.layers[1].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
       for i in range(layer1):
-        onebias = autoencoder.layers[1].get_weights()[1][i]
+        onebias = codecvs.layers[1].get_weights()[1][i]
         if onebias>0.0:
           if actfun1 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
           elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
@@ -448,11 +302,11 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
           toprint = toprint + "1lr_%i," % (j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(layer1):
-          toprint = toprint + "%0.5f," % (autoencoder.layers[2].get_weights()[0][j,i])
+          toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
       for i in range(layer2):
-        onebias = autoencoder.layers[2].get_weights()[1][i]
+        onebias = codecvs.layers[2].get_weights()[1][i]
         if onebias>0.0:
           if actfun2 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
           elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
@@ -474,25 +328,134 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun2 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
         ofile.write("l2r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
-      for i in range(encdim):
-        toprint = "l3_%i: COMBINE ARG=" % (i+1)
-        for j in range(layer2):
-          toprint = toprint + "l2r_%i," % (j+1)
+      toprint = "l3: COMBINE ARG="
+      for j in range(layer2):
+        toprint = toprint + "l2r_%i," % (j+1)
+      toprint = toprint[:-1] + " COEFFICIENTS="
+      for j in range(layer2):
+        toprint = toprint + "%0.5f," % (codecvs.layers[3].get_weights()[0][j])
+      toprint = toprint[:-1] + " PERIODIC=NO\n"
+      ofile.write(toprint)
+      if codecvs.layers[2].get_weights()[1]>0.0:
+        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][i]))
+      else:
+        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][i]))
+      toprint = "PRINT ARG=l3r STRIDE=100 FILE=COLVAR\n"
+      ofile.write(toprint)
+    if layers==4:
+      for i in range(layer1):
+        toprint = "l1_%i: COMBINE ARG=" % (i+1)
+        for j in range(trajsize[1]):
+          toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
-        for j in range(layer2):
-          toprint = toprint + "%0.5f," % (autoencoder.layers[3].get_weights()[0][j,i])
+        for j in range(3*trajsize[1]):
+          toprint = toprint + "%0.5f," % (codecvs.layers[1].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
-      for i in range(encdim):
-        if autoencoder.layers[2].get_weights()[1][i]>0.0:
-          ofile.write("l3r_%i: MATHEVAL ARG=l3_%i FUNC=x+%0.5f PERIODIC=NO\n" % (i+1,i+1,autoencoder.layers[3].get_weights()[1][i]))
+      for i in range(layer1):
+        onebias = codecvs.layers[1].get_weights()[1][i]
+        if onebias>0.0:
+          if actfun1 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x+%0.5f))" % (onebias)
+          elif actfun1 == 'softsign': printfun = "(x+%0.5f)/(1.0+step(x+%0.5f)*(x+%0.5f))" % (onebias,onebias,onebias)
+          elif actfun1 == 'relu': printfun = "step(x+%0.5f)*(x+%0.5f)" % (onebias,onebias)
+          elif actfun1 == 'tanh': printfun = "(exp(x+%0.5f)-exp(-x-%0.5f))/(exp(x+%0.5f)+exp(-x-%0.5f))" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.5f))" % (onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.5f)*step(x-2.5+%0.5f)*(0.2*(x+%0.5f)+0.5) + step(x-2.5+%0.5f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'linear': printfun = "(x-%0.5f)" % (onebias)
         else:
-          ofile.write("l3r_%i: MATHEVAL ARG=l3_%i FUNC=x-%0.5f PERIODIC=NO\n" % (i+1,i+1,-autoencoder.layers[3].get_weights()[1][i]))
-      toprint = "PRINT ARG="
-      for i in range(encdim):
-        toprint = toprint + "l3r_%i," % (i+1)
-      toprint = toprint[:-1] + " STRIDE=100 FILE=COLVAR\n"
+          if actfun1 == 'elu': printfun = "(exp(x-%0.5f)-1.0)*step(-x+%0.5f)+(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.5f)-1.67326)*step(-x+%0.5f)+1.0507*(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x-%0.5f))" % (-onebias)
+          elif actfun1 == 'softsign': printfun = "(x-%0.5f)/(1.0+step(x-%0.5f)*(x-%0.5f))" % (-onebias,-onebias,-onebias)
+          elif actfun1 == 'relu': printfun = "step(x-%0.5f)*(x-%0.5f)" % (-onebias,-onebias)
+          elif actfun1 == 'tanh': printfun = "(exp(x-%0.5f)-exp(-x+%0.5f))/(exp(x-%0.5f)+exp(-x+%0.5f))" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.5f))" % (-onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
+        ofile.write("l1r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
+      for i in range(layer2):
+        toprint = "l2_%i: COMBINE ARG=" % (i+1)
+        for j in range(layer1):
+          toprint = toprint + "1lr_%i," % (j+1)
+        toprint = toprint[:-1] + " COEFFICIENTS="
+        for j in range(layer1):
+          toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,i])
+        toprint = toprint[:-1] + " PERIODIC=NO\n"
+        ofile.write(toprint)
+      for i in range(layer2):
+        onebias = codecvs.layers[2].get_weights()[1][i]
+        if onebias>0.0:
+          if actfun2 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'softplus': printfun = "log(1.0+exp(x+%0.5f))" % (onebias)
+          elif actfun2 == 'softsign': printfun = "(x+%0.5f)/(1.0+step(x+%0.5f)*(x+%0.5f))" % (onebias,onebias,onebias)
+          elif actfun2 == 'relu': printfun = "step(x+%0.5f)*(x+%0.5f)" % (onebias,onebias)
+          elif actfun2 == 'tanh': printfun = "(exp(x+%0.5f)-exp(-x-%0.5f))/(exp(x+%0.5f)+exp(-x-%0.5f))" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.5f))" % (onebias)
+          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5+%0.5f)*step(x-2.5+%0.5f)*(0.2*(x+%0.5f)+0.5) + step(x-2.5+%0.5f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'linear': printfun = "(x-%0.5f)" % (onebias)
+        else:
+          if actfun2 == 'elu': printfun = "(exp(x-%0.5f)-1.0)*step(-x+%0.5f)+(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.5f)-1.67326)*step(-x+%0.5f)+1.0507*(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'softplus': printfun = "log(1.0+exp(x-%0.5f))" % (-onebias)
+          elif actfun2 == 'softsign': printfun = "(x-%0.5f)/(1.0+step(x-%0.5f)*(x-%0.5f))" % (-onebias,-onebias,-onebias)
+          elif actfun2 == 'relu': printfun = "step(x-%0.5f)*(x-%0.5f)" % (-onebias,-onebias)
+          elif actfun2 == 'tanh': printfun = "(exp(x-%0.5f)-exp(-x+%0.5f))/(exp(x-%0.5f)+exp(-x+%0.5f))" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.5f))" % (-onebias)
+          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
+        ofile.write("l2r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
+
+      for i in range(layer3):
+        toprint = "l3_%i: COMBINE ARG=" % (i+1)
+        for j in range(layer1):
+          toprint = toprint + "1lr_%i," % (j+1)
+        toprint = toprint[:-1] + " COEFFICIENTS="
+        for j in range(layer1):
+          toprint = toprint + "%0.5f," % (codecvs.layers[3].get_weights()[0][j,i])
+        toprint = toprint[:-1] + " PERIODIC=NO\n"
+        ofile.write(toprint)
+      for i in range(layer3):
+        onebias = codecvs.layers[3].get_weights()[1][i]
+        if onebias>0.0:
+          if actfun3 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
+          elif actfun3 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
+          elif actfun3 == 'softplus': printfun = "log(1.0+exp(x+%0.5f))" % (onebias)
+          elif actfun3 == 'softsign': printfun = "(x+%0.5f)/(1.0+step(x+%0.5f)*(x+%0.5f))" % (onebias,onebias,onebias)
+          elif actfun3 == 'relu': printfun = "step(x+%0.5f)*(x+%0.5f)" % (onebias,onebias)
+          elif actfun3 == 'tanh': printfun = "(exp(x+%0.5f)-exp(-x-%0.5f))/(exp(x+%0.5f)+exp(-x-%0.5f))" % (onebias,onebias,onebias,onebias)
+          elif actfun3 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.5f))" % (onebias)
+          elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5+%0.5f)*step(x-2.5+%0.5f)*(0.2*(x+%0.5f)+0.5) + step(x-2.5+%0.5f)" % (onebias,onebias,onebias,onebias)
+          elif actfun3 == 'linear': printfun = "(x-%0.5f)" % (onebias)
+        else:
+          if actfun3 == 'elu': printfun = "(exp(x-%0.5f)-1.0)*step(-x+%0.5f)+(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun3 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.5f)-1.67326)*step(-x+%0.5f)+1.0507*(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun3 == 'softplus': printfun = "log(1.0+exp(x-%0.5f))" % (-onebias)
+          elif actfun3 == 'softsign': printfun = "(x-%0.5f)/(1.0+step(x-%0.5f)*(x-%0.5f))" % (-onebias,-onebias,-onebias)
+          elif actfun3 == 'relu': printfun = "step(x-%0.5f)*(x-%0.5f)" % (-onebias,-onebias)
+          elif actfun3 == 'tanh': printfun = "(exp(x-%0.5f)-exp(-x+%0.5f))/(exp(x-%0.5f)+exp(-x+%0.5f))" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun3 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.5f))" % (-onebias)
+          elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun3 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
+        ofile.write("l3r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
+      #for i in range(encdim):
+      toprint = "l4: COMBINE ARG="
+      for j in range(layer3):
+        toprint = toprint + "l3r_%i," % (j+1)
+      toprint = toprint[:-1] + " COEFFICIENTS="
+      for j in range(layer2):
+        toprint = toprint + "%0.5f," % (codecvs.layers[4].get_weights()[0][j])
+      toprint = toprint[:-1] + " PERIODIC=NO\n"
+      ofile.write(toprint)
+      #for i in range(encdim):
+      if codecvs.layers[2].get_weights()[1]>0.0:
+        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][i]))
+      else:
+        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][i]))
+      toprint = "PRINT ARG=l4r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     ofile.close()
-  return autoencoder, np.corrcoef(vec1,vec2)[0,1]
+  return codecvs, np.corrcoef(vec1,vec2)[0,1]
 

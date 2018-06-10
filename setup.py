@@ -4,10 +4,9 @@ def readme():
   with open('README.md') as f:
     return f.read()
 
-
-setup(name='encodetraj',
+setup(name='anncolvar',
       version='0.1',
-      description='(Deep learning) autoencoders for molecular trajectory analysis',
+      description='Coding collective variables by artificial neural networks',
       long_description=readme(),
       classifiers=[
         'Development Status :: 2 - Pre-Alpha',
@@ -16,13 +15,13 @@ setup(name='encodetraj',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
         'Topic :: Scientific/Engineering :: Chemistry',
       ],
-      keywords='autoencoder deep learning molecular dynamics simulation',
-      url='https://github.com/spiwokv/encodetraj',
+      keywords='artificial neural networks molecular dynamics simulation',
+      url='https://github.com/spiwokv/anncolvar',
       author='Vojtech Spiwok, ',
       author_email='spiwokv@vscht.cz',
       license='MIT',
-      packages=['encodetrajlib'],
-      scripts=['bin/encodetraj'],
+      packages=['anncvlib'],
+      scripts=['bin/anncolvar'],
       install_requires=[
           'numpy',
           'cython',

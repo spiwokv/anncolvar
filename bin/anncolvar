@@ -11,10 +11,10 @@ for (name, short) in libnames:
   else:
     globals()[short] = lib
 
-import deepcvlib
+import anncvlib
 
 # Parsing command line arguments
-parser = arg.ArgumentParser(description='(Deep learning) of collective variables of molecular systems, requires numpy, keras and mdtraj')
+parser = arg.ArgumentParser(description='Artificial neural network learning of collective variables of molecular systems, requires numpy, keras and mdtraj')
 
 parser.add_argument('-i', dest='infile', default='traj.xtc',
 help='Input trajectory in pdb, xtc, trr, dcd, netcdf or mdcrd, WARNING: the trajectory must be 1. centered in the PBC box, 2. fitted to a reference structure and 3. must contain only atoms to be analysed!')
@@ -155,11 +155,11 @@ modelfile = args.modelfile
 plumedfile = args.plumedfile
 if plumedfile[-4:] != '.dat':
   plumedfile = plumedfile + '.dat'
-deepcvlib.deepcollectivevariable(infilename, intopname, colvarname, column,
-                                 boxx, boxy, boxz, atestset,
-                                 shuffle, layers, layer1, layer2, layer3,
-                                 actfun1, actfun2, actfun3,
-                                 optim, loss, epochs, batch,
-                                 ofilename, modelfile, plumedfile)
+anncvlib.anncollectivevariable(infilename, intopname, colvarname, column,
+                               boxx, boxy, boxz, atestset,
+                               shuffle, layers, layer1, layer2, layer3,
+                               actfun1, actfun2, actfun3,
+                               optim, loss, epochs, batch,
+                               ofilename, ofiletype, modelfile, plumedfile)
 
 
