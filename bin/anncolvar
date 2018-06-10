@@ -25,6 +25,9 @@ help='Input topology in pdb, WARNING: the structure must be 1. centered in the P
 parser.add_argument('-c', dest='colvar', default='colvar.txt',
 help='Input collective variable file in text formate, must contain the same number of lines as frames in the trajectory')
 
+parser.add_argument('-col', dest='col', default=2, type=int,
+help='The index of the column containing collective variables in the input collective variable file')
+
 parser.add_argument('-boxx', dest='boxx', default=0.0, type=float,
 help='Size of x coordinate of PBC box (from 0 to set value in nm)')
 
@@ -51,9 +54,6 @@ help='Number of neurons in the third encoding layer (default = 256)')
 
 parser.add_argument('-layer3', dest='layer3', default=256, type=int,
 help='Number of neurons in the fourth encoding layer (default = 256)')
-
-parser.add_argument('-encdim', dest='encdim', default=3, type=int,
-help='Encoding dimension (default = 3)')
 
 parser.add_argument('-actfun1', dest='actfun1', default='sigmoid',
 help='Activation function of the first layer (default = sigmoid, for options see keras documentation)')
@@ -160,6 +160,6 @@ anncvlib.anncollectivevariable(infilename, intopname, colvarname, column,
                                shuffle, layers, layer1, layer2, layer3,
                                actfun1, actfun2, actfun3,
                                optim, loss, epochs, batch,
-                               ofilename, ofiletype, modelfile, plumedfile)
+                               ofilename, modelfile, plumedfile)
 
 

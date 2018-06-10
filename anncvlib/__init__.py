@@ -10,12 +10,12 @@ for (name, short) in libnames:
   else:
     globals()[short] = lib
 
-def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
-                           boxx=0.0, boxy=0.0, boxz=0.0, atestset=0.1,
-                           shuffle=1, layers=2, layer1=256, layer2=256, layer3=256,
-                           actfun1='sigmoid', actfun2='sigmoid', actfun2='sigmoid',
-                           optim='adam', loss='mean_squared_error', epochs=100, batch=0,
-                           ofilename='', ofiletype=0, modelfile='', plumedfile=''):
+def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
+                          boxx=0.0, boxy=0.0, boxz=0.0, atestset=0.1,
+                          shuffle=1, layers=2, layer1=256, layer2=256, layer3=256,
+                          actfun1='sigmoid', actfun2='sigmoid', actfun3='sigmoid',
+                          optim='adam', loss='mean_squared_error', epochs=100, batch=0,
+                          ofilename='', modelfile='', plumedfile=''):
   try:
     traj = md.load(infilename, top=intopname)
   except:
@@ -23,7 +23,7 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
     exit(0)
   else:
     print("%s succesfully loaded" % traj)
-  print()
+  print("")
   
   # Conversion of the trajectory from Nframes x Natoms x 3 to Nframes x (Natoms x 3)
   trajsize = traj.xyz.shape
@@ -47,7 +47,7 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
     if boxz == 0.0:
       boxz = 1.2*np.amax(traj.xyz[:,:,2])
     print("box size set to %6.3f x %6.3f x %6.3f nm" % (boxx, boxy, boxz))
-    print()
+    print("")
   
   if np.amax(traj.xyz[:,:,0]) > boxx or np.amax(traj.xyz[:,:,1]) > boxy or np.amax(traj.xyz[:,:,2]) > boxz:
     print("ERROR: Some of atom has coordinate higher than box size (i.e. it is outside the box)")
@@ -87,7 +87,7 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
     print("ERROR: testset empty, increase testsize")
     exit(0)
   print("Training and test sets consist of %i and %i trajectory frames, respectively" % (trajsize[0]-testsize, testsize))
-  print()
+  print("")
   
   # Shuffling the trajectory before splitting
   if shuffle == 1:
@@ -99,7 +99,7 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
   if shuffle == 1:
     np.random.shuffle(indexes)
   training_set, testing_set = traj2[indexes[:-testsize],:]/maxbox, traj2[indexes[-testsize:],:]/maxbox
-  training_cvs, testing_cvs = cvs[indexes[:-testsize],:], cvs[indexes[-testsize:],:]
+  training_cvs, testing_cvs = cvs[indexes[:-testsize]], cvs[indexes[-testsize:]]
   
   # (Deep) learning  
   input_coord = krs.layers.Input(shape=(trajsize[1]*3,))
@@ -127,53 +127,33 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
   coded_cvs = codecvs.predict(traj2/maxbox)
   
   # Calculating Pearson correlation coefficient
-  print()
-  print("Pearson correlation coefficient for original and coded cvs is %f" % np.corrcoef(cvs,coded_cvs)[0,1])
-  print()
+  print("")
+  print("Pearson correlation coefficient for original and coded cvs is %f" % np.corrcoef(cvs,coded_cvs[:,0])[0,1])
+  print("")
   
-  print("Pearson correlation coefficient for original and coded cvs in training set is %f" % np.corrcoef(training_cvs,coded_cvs[indexes[:-testsize],:])[0,1])
-  print()
+  print("Pearson correlation coefficient for original and coded cvs in training set is %f" % np.corrcoef(training_cvs,coded_cvs[indexes[:-testsize],0])[0,1])
+  print("")
   
-  print("Pearson correlation coefficient for original and coded cvs in testing set is %f" % np.corrcoef(testing_cvs,coded_cvs[indexes[-testsize:],:])[0,1])
-  print()
+  print("Pearson correlation coefficient for original and coded cvs in testing set is %f" % np.corrcoef(testing_cvs,coded_cvs[indexes[-testsize:],0])[0,1])
+  print("")
   
   # Generating low-dimensional output
-  if ofiletype > 0:
+  if len(ofilename) > 0:
     print("Writing collective variables into %s" % ofilename)
     print("")
-    if ofiletype == 1:
-      ofile = open(ofilename, "w")
-      ofile.write("# This file was created on %s\n" % dt.datetime.now().isoformat())
-      ofile.write("# Created by: anncolvar V 0.1\n")
-      sysargv = ""
-      for item in sys.argv:
-        sysargv = sysargv+item+" "
-      ofile.write("# Command line: %s\n" % sysargv)
-      ofile.write("@TYPE xy\n")
-      ofile.write("@ title \"Coded CVs\"\n")
-      ofile.write("@ xaxis  label \"original CV\"\n")
-      ofile.write("@ yaxis  label \"coded CV\"\n")
-      for i in range(trajsize[0]):
-        ofile.write("%f %f " % (coded_cvs[i],cvs[i]))
-        typeofset = 'TE'
-        if i in indexes[:-testsize]:
-          typeofset = 'TR'
-        ofile.write("%s \n" % typeofset)
-      ofile.close()
-    if ofiletype == 2:
-      ofile = open(ofilename, "w")
-      for i in range(trajsize[0]):
-        ofile.write("%f %f " % (coded_cvs[i],cvs[i]))
-        typeofset = 'TE'
-        if i in indexes[:-testsize]:
-          typeofset = 'TR'
-        ofile.write("%s \n" % typeofset)
-      ofile.close()
+    ofile = open(ofilename, "w")
+    for i in range(trajsize[0]):
+      ofile.write("%f %f " % (coded_cvs[i],cvs[i]))
+      typeofset = 'TE'
+      if i in indexes[:-testsize]:
+        typeofset = 'TR'
+      ofile.write("%s \n" % typeofset)
+    ofile.close()
   
   # Saving the model
   if modelfile != '':
     print("Writing model into %s.txt" % modelfile)
-    print()
+    print("")
     ofile = open(modelfile+'.txt', "w")
     ofile.write("maxbox = %f\n" % maxbox)
     ofile.write("input_coord = krs.layers.Input(shape=(trajsize[1]*3,))\n")
@@ -187,7 +167,7 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
     ofile.write("codecvs = krs.models.Model(input_coord, encoded)\n")
     ofile.close()
     print("Writing model weights and biases into %s_*.npy NumPy arrays" % modelfile)
-    print()
+    print("")
     if layers == 2:
       np.save(file=modelfile+"_1.npy", arr=codecvs.layers[1].get_weights())
       np.save(file=modelfile+"_2.npy", arr=codecvs.layers[2].get_weights())
@@ -203,7 +183,7 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
   
   if plumedfile != '':
     print("Writing Plumed input into %s" % plumedfile)
-    print()
+    print("")
     traj = md.load(infilename, top=intopname)
     table, bonds = traj.topology.to_dataframe()
     atoms = table['serial'][:]
@@ -254,13 +234,13 @@ def deepcollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "l1r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
       for j in range(layer2):
-        toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,i])
+        toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[2].get_weights()[1]>0.0:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][i]))
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1]))
       else:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][i]))
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1]))
       toprint = "PRINT ARG=l2r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==3:
