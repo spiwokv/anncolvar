@@ -316,10 +316,10 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "%0.5f," % (codecvs.layers[3].get_weights()[0][j,0])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
-      if codecvs.layers[3].get_weights()[1]>0.0:
-        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1]))
+      if codecvs.layers[3].get_weights()[1][0]>0.0:
+        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0]))
       else:
-        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1]))
+        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0]))
       toprint = "PRINT ARG=l3r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==4:
@@ -387,13 +387,12 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun2 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
         ofile.write("l2r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
-
       for i in range(layer3):
         toprint = "l3_%i: COMBINE ARG=" % (i+1)
-        for j in range(layer1):
+        for j in range(layer2):
           toprint = toprint + "1lr_%i," % (j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
-        for j in range(layer1):
+        for j in range(layer2):
           toprint = toprint + "%0.5f," % (codecvs.layers[3].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
@@ -425,15 +424,15 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       for j in range(layer3):
         toprint = toprint + "l3r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
-      for j in range(layer2):
+      for j in range(layer3):
         toprint = toprint + "%0.5f," % (codecvs.layers[4].get_weights()[0][j,0])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       #for i in range(encdim):
-      if codecvs.layers[4].get_weights()[1]>0.0:
-        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1]))
+      if codecvs.layers[4].get_weights()[1][0]>0.0:
+        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0]))
       else:
-        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1]))
+        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0]))
       toprint = "PRINT ARG=l4r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     ofile.close()
