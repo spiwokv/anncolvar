@@ -230,17 +230,17 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun1 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
         ofile.write("l1r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       toprint = "l2: COMBINE ARG="
-      for j in range(layer2):
+      for j in range(layer1):
         toprint = toprint + "l1r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
-      for j in range(layer2):
-        toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,0])
+      for j in range(layer1):
+        toprint = toprint + "%0.5f," % (codecvs.layers[1].get_weights()[0][j,0])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[2].get_weights()[1]>0.0:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1]))
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[1].get_weights()[1]))
       else:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1]))
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[1].get_weights()[1]))
       toprint = "PRINT ARG=l2r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==3:
