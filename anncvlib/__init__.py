@@ -279,7 +279,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       for i in range(layer2):
         toprint = "l2_%i: COMBINE ARG=" % (i+1)
         for j in range(layer1):
-          toprint = toprint + "1lr_%i," % (j+1)
+          toprint = toprint + "l1r_%i," % (j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(layer1):
           toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,i])
@@ -358,7 +358,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       for i in range(layer2):
         toprint = "l2_%i: COMBINE ARG=" % (i+1)
         for j in range(layer1):
-          toprint = toprint + "1lr_%i," % (j+1)
+          toprint = toprint + "l1r_%i," % (j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(layer1):
           toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,i])
@@ -390,7 +390,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       for i in range(layer3):
         toprint = "l3_%i: COMBINE ARG=" % (i+1)
         for j in range(layer2):
-          toprint = toprint + "1lr_%i," % (j+1)
+          toprint = toprint + "l2r_%i," % (j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(layer2):
           toprint = toprint + "%0.5f," % (codecvs.layers[3].get_weights()[0][j,i])
