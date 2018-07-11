@@ -307,7 +307,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
           elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*((0.2*(x-%0.6f)+0.5)-step(x-2.5-%0.6f)*(0.2*(x-%0.6f)-0.5))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun2 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
-        ofile.write("l2r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
+        ofile.write("l2r_%i: MATHEVAL ARG=l2_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       toprint = "l3: COMBINE ARG="
       for j in range(layer2):
         toprint = toprint + "l2r_%i," % (j+1)
@@ -386,7 +386,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
           elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*((0.2*(x-%0.6f)+0.5)-step(x-2.5-%0.6f)*(0.2*(x-%0.6f)-0.5))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun2 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
-        ofile.write("l2r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
+        ofile.write("l2r_%i: MATHEVAL ARG=l2_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       for i in range(layer3):
         toprint = "l3_%i: COMBINE ARG=" % (i+1)
         for j in range(layer2):
@@ -418,7 +418,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun3 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
           elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*((0.2*(x-%0.6f)+0.5)-step(x-2.5-%0.6f)*(0.2*(x-%0.6f)-0.5))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun3 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
-        ofile.write("l3r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
+        ofile.write("l3r_%i: MATHEVAL ARG=l3_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       #for i in range(encdim):
       toprint = "l4: COMBINE ARG="
       for j in range(layer3):
