@@ -216,7 +216,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun1 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
           elif actfun1 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
           elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5)+step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*((0.2*(x+%0.6f)+0.5)-step(x-2.5+%0.6f)*(0.2*(x+%0.6f)-0.5))" % (onebias,onebias,onebias,onebias)
           elif actfun1 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
           if actfun1 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
@@ -226,7 +226,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun1 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
           elif actfun1 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5)+step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*((0.2*(x-%0.6f)+0.5)-step(x-2.5-%0.6f)*(0.2*(x-%0.6f)-0.5))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun1 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l1r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       toprint = "l2: COMBINE ARG="
@@ -263,7 +263,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun1 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
           elif actfun1 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
           elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5)+step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*((0.2*(x+%0.6f)+0.5)-step(x-2.5+%0.6f)*(0.2*(x+%0.6f)-0.5))" % (onebias,onebias,onebias,onebias)
           elif actfun1 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
           if actfun1 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
@@ -273,7 +273,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun1 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
           elif actfun1 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5)+step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*((0.2*(x-%0.6f)+0.5)-step(x-2.5-%0.6f)*(0.2*(x-%0.6f)-0.5))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun1 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l1r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       for i in range(layer2):
@@ -295,7 +295,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun2 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
           elif actfun2 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
           elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
-          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5)+step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*((0.2*(x+%0.6f)+0.5)-step(x-2.5+%0.6f)*(0.2*(x+%0.6f)-0.5))" % (onebias,onebias,onebias,onebias)
           elif actfun2 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
           if actfun2 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
@@ -305,7 +305,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun2 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
           elif actfun2 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
-          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5)+step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*((0.2*(x-%0.6f)+0.5)-step(x-2.5-%0.6f)*(0.2*(x-%0.6f)-0.5))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun2 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l2r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       toprint = "l3: COMBINE ARG="
@@ -342,7 +342,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun1 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
           elif actfun1 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
           elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5)+step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*((0.2*(x+%0.6f)+0.5)-step(x-2.5+%0.6f)*(0.2*(x+%0.6f)-0.5))" % (onebias,onebias,onebias,onebias)
           elif actfun1 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
           if actfun1 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
@@ -352,7 +352,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun1 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
           elif actfun1 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5)+step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*((0.2*(x-%0.6f)+0.5)-step(x-2.5-%0.6f)*(0.2*(x-%0.6f)-0.5))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun1 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l1r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       for i in range(layer2):
@@ -374,7 +374,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun2 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
           elif actfun2 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
           elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
-          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5)+step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*((0.2*(x+%0.6f)+0.5)-step(x-2.5+%0.6f)*(0.2*(x+%0.6f)-0.5))" % (onebias,onebias,onebias,onebias)
           elif actfun2 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
           if actfun2 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
@@ -384,7 +384,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun2 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
           elif actfun2 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
-          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5)+step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*((0.2*(x-%0.6f)+0.5)-step(x-2.5-%0.6f)*(0.2*(x-%0.6f)-0.5))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun2 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l2r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       for i in range(layer3):
@@ -406,7 +406,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun3 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
           elif actfun3 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
           elif actfun3 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
-          elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5)+step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*((0.2*(x+%0.6f)+0.5)-step(x-2.5+%0.6f)*(0.2*(x+%0.6f)-0.5))" % (onebias,onebias,onebias,onebias)
           elif actfun3 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
           if actfun3 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
@@ -416,7 +416,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun3 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
           elif actfun3 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun3 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
-          elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5)+step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*((0.2*(x-%0.6f)+0.5)-step(x-2.5-%0.6f)*(0.2*(x-%0.6f)-0.5))" % (-onebias,-onebias,-onebias,-onebias)
           elif actfun3 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l3r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       #for i in range(encdim):
