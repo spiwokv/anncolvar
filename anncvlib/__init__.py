@@ -234,7 +234,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "l1r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
       for j in range(layer1):
-        toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,0])
+        toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[2].get_weights()[1][0]>0.0:
