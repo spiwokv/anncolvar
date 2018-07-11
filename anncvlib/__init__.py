@@ -203,44 +203,44 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(3*trajsize[1]):
-          toprint = toprint + "%0.5f," % (codecvs.layers[1].get_weights()[0][j,i])
+          toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
       for i in range(layer1):
         onebias = codecvs.layers[1].get_weights()[1][i]
         if onebias>0.0:
-          if actfun1 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x+%0.5f))" % (onebias)
-          elif actfun1 == 'softsign': printfun = "(x+%0.5f)/(1.0+step(x+%0.5f)*(x+%0.5f))" % (onebias,onebias,onebias)
-          elif actfun1 == 'relu': printfun = "step(x+%0.5f)*(x+%0.5f)" % (onebias,onebias)
-          elif actfun1 == 'tanh': printfun = "(exp(x+%0.5f)-exp(-x-%0.5f))/(exp(x+%0.5f)+exp(-x-%0.5f))" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.5f))" % (onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.5f)*step(x-2.5+%0.5f)*(0.2*(x+%0.5f)+0.5) + step(x-2.5+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'linear': printfun = "(x-%0.5f)" % (onebias)
+          if actfun1 == 'elu': printfun = "(exp(x+%0.6f)-1.0)*step(-x-%0.6f)+(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.6f)-1.67326)*step(-x-%0.6f)+1.0507*(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x+%0.6f))" % (onebias)
+          elif actfun1 == 'softsign': printfun = "(x+%0.6f)/(1.0+step(x+%0.6f)*(x+%0.6f))" % (onebias,onebias,onebias)
+          elif actfun1 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
+          elif actfun1 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5) + step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
-          if actfun1 == 'elu': printfun = "(exp(x-%0.5f)-1.0)*step(-x+%0.5f)+(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.5f)-1.67326)*step(-x+%0.5f)+1.0507*(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x-%0.5f))" % (-onebias)
-          elif actfun1 == 'softsign': printfun = "(x-%0.5f)/(1.0+step(x-%0.5f)*(x-%0.5f))" % (-onebias,-onebias,-onebias)
-          elif actfun1 == 'relu': printfun = "step(x-%0.5f)*(x-%0.5f)" % (-onebias,-onebias)
-          elif actfun1 == 'tanh': printfun = "(exp(x-%0.5f)-exp(-x+%0.5f))/(exp(x-%0.5f)+exp(-x+%0.5f))" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.5f))" % (-onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
+          if actfun1 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.6f)-1.67326)*step(-x+%0.6f)+1.0507*(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x-%0.6f))" % (-onebias)
+          elif actfun1 == 'softsign': printfun = "(x-%0.6f)/(1.0+step(x-%0.6f)*(x-%0.6f))" % (-onebias,-onebias,-onebias)
+          elif actfun1 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
+          elif actfun1 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5) + step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l1r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       toprint = "l2: COMBINE ARG="
       for j in range(layer1):
         toprint = toprint + "l1r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
       for j in range(layer1):
-        toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j])
+        toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[2].get_weights()[1][0]>0.0:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][0]))
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x+%0.6f PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][0]))
       else:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0]))
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x-%0.6f PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0]))
       toprint = "PRINT ARG=l2r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==3:
@@ -250,31 +250,31 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(3*trajsize[1]):
-          toprint = toprint + "%0.5f," % (codecvs.layers[1].get_weights()[0][j,i])
+          toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
       for i in range(layer1):
         onebias = codecvs.layers[1].get_weights()[1][i]
         if onebias>0.0:
-          if actfun1 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x+%0.5f))" % (onebias)
-          elif actfun1 == 'softsign': printfun = "(x+%0.5f)/(1.0+step(x+%0.5f)*(x+%0.5f))" % (onebias,onebias,onebias)
-          elif actfun1 == 'relu': printfun = "step(x+%0.5f)*(x+%0.5f)" % (onebias,onebias)
-          elif actfun1 == 'tanh': printfun = "(exp(x+%0.5f)-exp(-x-%0.5f))/(exp(x+%0.5f)+exp(-x-%0.5f))" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.5f))" % (onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.5f)*step(x-2.5+%0.5f)*(0.2*(x+%0.5f)+0.5) + step(x-2.5+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'linear': printfun = "(x-%0.5f)" % (onebias)
+          if actfun1 == 'elu': printfun = "(exp(x+%0.6f)-1.0)*step(-x-%0.6f)+(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.6f)-1.67326)*step(-x-%0.6f)+1.0507*(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x+%0.6f))" % (onebias)
+          elif actfun1 == 'softsign': printfun = "(x+%0.6f)/(1.0+step(x+%0.6f)*(x+%0.6f))" % (onebias,onebias,onebias)
+          elif actfun1 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
+          elif actfun1 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5) + step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
-          if actfun1 == 'elu': printfun = "(exp(x-%0.5f)-1.0)*step(-x+%0.5f)+(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.5f)-1.67326)*step(-x+%0.5f)+1.0507*(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x-%0.5f))" % (-onebias)
-          elif actfun1 == 'softsign': printfun = "(x-%0.5f)/(1.0+step(x-%0.5f)*(x-%0.5f))" % (-onebias,-onebias,-onebias)
-          elif actfun1 == 'relu': printfun = "step(x-%0.5f)*(x-%0.5f)" % (-onebias,-onebias)
-          elif actfun1 == 'tanh': printfun = "(exp(x-%0.5f)-exp(-x+%0.5f))/(exp(x-%0.5f)+exp(-x+%0.5f))" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.5f))" % (-onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
+          if actfun1 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.6f)-1.67326)*step(-x+%0.6f)+1.0507*(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x-%0.6f))" % (-onebias)
+          elif actfun1 == 'softsign': printfun = "(x-%0.6f)/(1.0+step(x-%0.6f)*(x-%0.6f))" % (-onebias,-onebias,-onebias)
+          elif actfun1 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
+          elif actfun1 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5) + step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l1r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       for i in range(layer2):
         toprint = "l2_%i: COMBINE ARG=" % (i+1)
@@ -282,44 +282,44 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           toprint = toprint + "l1r_%i," % (j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(layer1):
-          toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,i])
+          toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
       for i in range(layer2):
         onebias = codecvs.layers[2].get_weights()[1][i]
         if onebias>0.0:
-          if actfun2 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun2 == 'softplus': printfun = "log(1.0+exp(x+%0.5f))" % (onebias)
-          elif actfun2 == 'softsign': printfun = "(x+%0.5f)/(1.0+step(x+%0.5f)*(x+%0.5f))" % (onebias,onebias,onebias)
-          elif actfun2 == 'relu': printfun = "step(x+%0.5f)*(x+%0.5f)" % (onebias,onebias)
-          elif actfun2 == 'tanh': printfun = "(exp(x+%0.5f)-exp(-x-%0.5f))/(exp(x+%0.5f)+exp(-x-%0.5f))" % (onebias,onebias,onebias,onebias)
-          elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.5f))" % (onebias)
-          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5+%0.5f)*step(x-2.5+%0.5f)*(0.2*(x+%0.5f)+0.5) + step(x-2.5+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun2 == 'linear': printfun = "(x-%0.5f)" % (onebias)
+          if actfun2 == 'elu': printfun = "(exp(x+%0.6f)-1.0)*step(-x-%0.6f)+(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.6f)-1.67326)*step(-x-%0.6f)+1.0507*(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'softplus': printfun = "log(1.0+exp(x+%0.6f))" % (onebias)
+          elif actfun2 == 'softsign': printfun = "(x+%0.6f)/(1.0+step(x+%0.6f)*(x+%0.6f))" % (onebias,onebias,onebias)
+          elif actfun2 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
+          elif actfun2 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
+          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5) + step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
-          if actfun2 == 'elu': printfun = "(exp(x-%0.5f)-1.0)*step(-x+%0.5f)+(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.5f)-1.67326)*step(-x+%0.5f)+1.0507*(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun2 == 'softplus': printfun = "log(1.0+exp(x-%0.5f))" % (-onebias)
-          elif actfun2 == 'softsign': printfun = "(x-%0.5f)/(1.0+step(x-%0.5f)*(x-%0.5f))" % (-onebias,-onebias,-onebias)
-          elif actfun2 == 'relu': printfun = "step(x-%0.5f)*(x-%0.5f)" % (-onebias,-onebias)
-          elif actfun2 == 'tanh': printfun = "(exp(x-%0.5f)-exp(-x+%0.5f))/(exp(x-%0.5f)+exp(-x+%0.5f))" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.5f))" % (-onebias)
-          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun2 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
+          if actfun2 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.6f)-1.67326)*step(-x+%0.6f)+1.0507*(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'softplus': printfun = "log(1.0+exp(x-%0.6f))" % (-onebias)
+          elif actfun2 == 'softsign': printfun = "(x-%0.6f)/(1.0+step(x-%0.6f)*(x-%0.6f))" % (-onebias,-onebias,-onebias)
+          elif actfun2 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
+          elif actfun2 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
+          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5) + step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l2r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       toprint = "l3: COMBINE ARG="
       for j in range(layer2):
         toprint = toprint + "l2r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
       for j in range(layer2):
-        toprint = toprint + "%0.5f," % (codecvs.layers[3].get_weights()[0][j,0])
+        toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j,0])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[3].get_weights()[1][0]>0.0:
-        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0]))
+        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x+%0.6f PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0]))
       else:
-        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0]))
+        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x-%0.6f PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0]))
       toprint = "PRINT ARG=l3r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==4:
@@ -329,31 +329,31 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(3*trajsize[1]):
-          toprint = toprint + "%0.5f," % (codecvs.layers[1].get_weights()[0][j,i])
+          toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
       for i in range(layer1):
         onebias = codecvs.layers[1].get_weights()[1][i]
         if onebias>0.0:
-          if actfun1 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x+%0.5f))" % (onebias)
-          elif actfun1 == 'softsign': printfun = "(x+%0.5f)/(1.0+step(x+%0.5f)*(x+%0.5f))" % (onebias,onebias,onebias)
-          elif actfun1 == 'relu': printfun = "step(x+%0.5f)*(x+%0.5f)" % (onebias,onebias)
-          elif actfun1 == 'tanh': printfun = "(exp(x+%0.5f)-exp(-x-%0.5f))/(exp(x+%0.5f)+exp(-x-%0.5f))" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.5f))" % (onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.5f)*step(x-2.5+%0.5f)*(0.2*(x+%0.5f)+0.5) + step(x-2.5+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun1 == 'linear': printfun = "(x-%0.5f)" % (onebias)
+          if actfun1 == 'elu': printfun = "(exp(x+%0.6f)-1.0)*step(-x-%0.6f)+(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.6f)-1.67326)*step(-x-%0.6f)+1.0507*(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x+%0.6f))" % (onebias)
+          elif actfun1 == 'softsign': printfun = "(x+%0.6f)/(1.0+step(x+%0.6f)*(x+%0.6f))" % (onebias,onebias,onebias)
+          elif actfun1 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
+          elif actfun1 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5) + step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun1 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
-          if actfun1 == 'elu': printfun = "(exp(x-%0.5f)-1.0)*step(-x+%0.5f)+(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.5f)-1.67326)*step(-x+%0.5f)+1.0507*(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x-%0.5f))" % (-onebias)
-          elif actfun1 == 'softsign': printfun = "(x-%0.5f)/(1.0+step(x-%0.5f)*(x-%0.5f))" % (-onebias,-onebias,-onebias)
-          elif actfun1 == 'relu': printfun = "step(x-%0.5f)*(x-%0.5f)" % (-onebias,-onebias)
-          elif actfun1 == 'tanh': printfun = "(exp(x-%0.5f)-exp(-x+%0.5f))/(exp(x-%0.5f)+exp(-x+%0.5f))" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.5f))" % (-onebias)
-          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun1 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
+          if actfun1 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.6f)-1.67326)*step(-x+%0.6f)+1.0507*(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'softplus': printfun = "log(1.0+exp(x-%0.6f))" % (-onebias)
+          elif actfun1 == 'softsign': printfun = "(x-%0.6f)/(1.0+step(x-%0.6f)*(x-%0.6f))" % (-onebias,-onebias,-onebias)
+          elif actfun1 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
+          elif actfun1 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
+          elif actfun1 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5) + step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun1 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l1r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       for i in range(layer2):
         toprint = "l2_%i: COMBINE ARG=" % (i+1)
@@ -361,31 +361,31 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           toprint = toprint + "l1r_%i," % (j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(layer1):
-          toprint = toprint + "%0.5f," % (codecvs.layers[2].get_weights()[0][j,i])
+          toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
       for i in range(layer2):
         onebias = codecvs.layers[2].get_weights()[1][i]
         if onebias>0.0:
-          if actfun2 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun2 == 'softplus': printfun = "log(1.0+exp(x+%0.5f))" % (onebias)
-          elif actfun2 == 'softsign': printfun = "(x+%0.5f)/(1.0+step(x+%0.5f)*(x+%0.5f))" % (onebias,onebias,onebias)
-          elif actfun2 == 'relu': printfun = "step(x+%0.5f)*(x+%0.5f)" % (onebias,onebias)
-          elif actfun2 == 'tanh': printfun = "(exp(x+%0.5f)-exp(-x-%0.5f))/(exp(x+%0.5f)+exp(-x-%0.5f))" % (onebias,onebias,onebias,onebias)
-          elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.5f))" % (onebias)
-          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5+%0.5f)*step(x-2.5+%0.5f)*(0.2*(x+%0.5f)+0.5) + step(x-2.5+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun2 == 'linear': printfun = "(x-%0.5f)" % (onebias)
+          if actfun2 == 'elu': printfun = "(exp(x+%0.6f)-1.0)*step(-x-%0.6f)+(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.6f)-1.67326)*step(-x-%0.6f)+1.0507*(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'softplus': printfun = "log(1.0+exp(x+%0.6f))" % (onebias)
+          elif actfun2 == 'softsign': printfun = "(x+%0.6f)/(1.0+step(x+%0.6f)*(x+%0.6f))" % (onebias,onebias,onebias)
+          elif actfun2 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
+          elif actfun2 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
+          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5) + step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun2 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
-          if actfun2 == 'elu': printfun = "(exp(x-%0.5f)-1.0)*step(-x+%0.5f)+(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.5f)-1.67326)*step(-x+%0.5f)+1.0507*(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun2 == 'softplus': printfun = "log(1.0+exp(x-%0.5f))" % (-onebias)
-          elif actfun2 == 'softsign': printfun = "(x-%0.5f)/(1.0+step(x-%0.5f)*(x-%0.5f))" % (-onebias,-onebias,-onebias)
-          elif actfun2 == 'relu': printfun = "step(x-%0.5f)*(x-%0.5f)" % (-onebias,-onebias)
-          elif actfun2 == 'tanh': printfun = "(exp(x-%0.5f)-exp(-x+%0.5f))/(exp(x-%0.5f)+exp(-x+%0.5f))" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.5f))" % (-onebias)
-          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun2 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
+          if actfun2 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.6f)-1.67326)*step(-x+%0.6f)+1.0507*(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'softplus': printfun = "log(1.0+exp(x-%0.6f))" % (-onebias)
+          elif actfun2 == 'softsign': printfun = "(x-%0.6f)/(1.0+step(x-%0.6f)*(x-%0.6f))" % (-onebias,-onebias,-onebias)
+          elif actfun2 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
+          elif actfun2 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
+          elif actfun2 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5) + step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun2 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l2r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       for i in range(layer3):
         toprint = "l3_%i: COMBINE ARG=" % (i+1)
@@ -393,31 +393,31 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           toprint = toprint + "l2r_%i," % (j+1)
         toprint = toprint[:-1] + " COEFFICIENTS="
         for j in range(layer2):
-          toprint = toprint + "%0.5f," % (codecvs.layers[3].get_weights()[0][j,i])
+          toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j,i])
         toprint = toprint[:-1] + " PERIODIC=NO\n"
         ofile.write(toprint)
       for i in range(layer3):
         onebias = codecvs.layers[3].get_weights()[1][i]
         if onebias>0.0:
-          if actfun3 == 'elu': printfun = "(exp(x+%0.5f)-1.0)*step(-x-%0.5f)+(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun3 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.5f)-1.67326)*step(-x-%0.5f)+1.0507*(x+%0.5f)*step(x+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun3 == 'softplus': printfun = "log(1.0+exp(x+%0.5f))" % (onebias)
-          elif actfun3 == 'softsign': printfun = "(x+%0.5f)/(1.0+step(x+%0.5f)*(x+%0.5f))" % (onebias,onebias,onebias)
-          elif actfun3 == 'relu': printfun = "step(x+%0.5f)*(x+%0.5f)" % (onebias,onebias)
-          elif actfun3 == 'tanh': printfun = "(exp(x+%0.5f)-exp(-x-%0.5f))/(exp(x+%0.5f)+exp(-x-%0.5f))" % (onebias,onebias,onebias,onebias)
-          elif actfun3 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.5f))" % (onebias)
-          elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5+%0.5f)*step(x-2.5+%0.5f)*(0.2*(x+%0.5f)+0.5) + step(x-2.5+%0.5f)" % (onebias,onebias,onebias,onebias)
-          elif actfun3 == 'linear': printfun = "(x-%0.5f)" % (onebias)
+          if actfun3 == 'elu': printfun = "(exp(x+%0.6f)-1.0)*step(-x-%0.6f)+(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun3 == 'selu': printfun = "1.0507*(1.67326*exp(x+%0.6f)-1.67326)*step(-x-%0.6f)+1.0507*(x+%0.6f)*step(x+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun3 == 'softplus': printfun = "log(1.0+exp(x+%0.6f))" % (onebias)
+          elif actfun3 == 'softsign': printfun = "(x+%0.6f)/(1.0+step(x+%0.6f)*(x+%0.6f))" % (onebias,onebias,onebias)
+          elif actfun3 == 'relu': printfun = "step(x+%0.6f)*(x+%0.6f)" % (onebias,onebias)
+          elif actfun3 == 'tanh': printfun = "(exp(x+%0.6f)-exp(-x-%0.6f))/(exp(x+%0.6f)+exp(-x-%0.6f))" % (onebias,onebias,onebias,onebias)
+          elif actfun3 == 'sigmoid': printfun = "1.0/(1.0+exp(-x-%0.6f))" % (onebias)
+          elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5+%0.6f)*step(x-2.5+%0.6f)*(0.2*(x+%0.6f)+0.5) + step(x-2.5+%0.6f)" % (onebias,onebias,onebias,onebias)
+          elif actfun3 == 'linear': printfun = "(x-%0.6f)" % (onebias)
         else:
-          if actfun3 == 'elu': printfun = "(exp(x-%0.5f)-1.0)*step(-x+%0.5f)+(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun3 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.5f)-1.67326)*step(-x+%0.5f)+1.0507*(x-%0.5f)*step(x-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun3 == 'softplus': printfun = "log(1.0+exp(x-%0.5f))" % (-onebias)
-          elif actfun3 == 'softsign': printfun = "(x-%0.5f)/(1.0+step(x-%0.5f)*(x-%0.5f))" % (-onebias,-onebias,-onebias)
-          elif actfun3 == 'relu': printfun = "step(x-%0.5f)*(x-%0.5f)" % (-onebias,-onebias)
-          elif actfun3 == 'tanh': printfun = "(exp(x-%0.5f)-exp(-x+%0.5f))/(exp(x-%0.5f)+exp(-x+%0.5f))" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun3 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.5f))" % (-onebias)
-          elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5-%0.5f)*step(x-2.5-%0.5f)*(0.2*(x-%0.5f)+0.5) + step(x-2.5-%0.5f)" % (-onebias,-onebias,-onebias,-onebias)
-          elif actfun3 == 'linear': printfun = "(x+%0.5f)" % (-onebias)
+          if actfun3 == 'elu': printfun = "(exp(x-%0.6f)-1.0)*step(-x+%0.6f)+(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun3 == 'selu': printfun = "1.0507*(1.67326*exp(x-%0.6f)-1.67326)*step(-x+%0.6f)+1.0507*(x-%0.6f)*step(x-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun3 == 'softplus': printfun = "log(1.0+exp(x-%0.6f))" % (-onebias)
+          elif actfun3 == 'softsign': printfun = "(x-%0.6f)/(1.0+step(x-%0.6f)*(x-%0.6f))" % (-onebias,-onebias,-onebias)
+          elif actfun3 == 'relu': printfun = "step(x-%0.6f)*(x-%0.6f)" % (-onebias,-onebias)
+          elif actfun3 == 'tanh': printfun = "(exp(x-%0.6f)-exp(-x+%0.6f))/(exp(x-%0.6f)+exp(-x+%0.6f))" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun3 == 'sigmoid': printfun = "1.0/(1.0+exp(-x+%0.6f))" % (-onebias)
+          elif actfun3 == 'hard_sigmoid': printfun = "step(x+2.5-%0.6f)*step(x-2.5-%0.6f)*(0.2*(x-%0.6f)+0.5) + step(x-2.5-%0.6f)" % (-onebias,-onebias,-onebias,-onebias)
+          elif actfun3 == 'linear': printfun = "(x+%0.6f)" % (-onebias)
         ofile.write("l3r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       #for i in range(encdim):
       toprint = "l4: COMBINE ARG="
@@ -425,14 +425,14 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "l3r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
       for j in range(layer3):
-        toprint = toprint + "%0.5f," % (codecvs.layers[4].get_weights()[0][j,0])
+        toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[0][j,0])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       #for i in range(encdim):
       if codecvs.layers[4].get_weights()[1][0]>0.0:
-        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x+%0.5f PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0]))
+        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x+%0.6f PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0]))
       else:
-        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x-%0.5f PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0]))
+        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x-%0.6f PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0]))
       toprint = "PRINT ARG=l4r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     ofile.close()
