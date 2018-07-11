@@ -17,7 +17,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
                           optim='adam', loss='mean_squared_error', epochs=100, batch=0,
                           ofilename='', modelfile='', plumedfile=''):
   try:
+    refpdb = md.load_pdb(intopname)
     traj = md.load(infilename, top=intopname)
+    traj.superpose(refpdb)
   except:
     print("Cannot load %s or %s, exiting." % (infilename, intopname))
     exit(0)
@@ -163,7 +165,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(encoded)\n" % (layer3, actfun3))
     if layers == 3:
       ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(encoded)\n" % (layer2, actfun2))
-    ofile.write("encoded = krs.layers.Dense(%i, activation='linear', use_bias=True)(encoded)\n" % encdim)
+    ofile.write("encoded = krs.layers.Dense(1, activation='linear', use_bias=True)(encoded)\n")
     ofile.write("codecvs = krs.models.Model(input_coord, encoded)\n")
     ofile.close()
     print("Writing model weights and biases into %s_*.npy NumPy arrays" % modelfile)
@@ -238,9 +240,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[2].get_weights()[1][0]>0.0:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x+%0.6f PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][0]))
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][0,]))
       else:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=x-%0.6f PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0]))
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0,]))
       toprint = "PRINT ARG=l2r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==3:
@@ -317,9 +319,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[3].get_weights()[1][0]>0.0:
-        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x+%0.6f PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0]))
+        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0,]))
       else:
-        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=x-%0.6f PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0]))
+        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0,]))
       toprint = "PRINT ARG=l3r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==4:
@@ -430,9 +432,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       ofile.write(toprint)
       #for i in range(encdim):
       if codecvs.layers[4].get_weights()[1][0]>0.0:
-        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x+%0.6f PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0]))
+        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0,]))
       else:
-        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=x-%0.6f PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0]))
+        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0,]))
       toprint = "PRINT ARG=l4r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     ofile.close()
