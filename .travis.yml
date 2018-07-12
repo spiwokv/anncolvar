@@ -74,3 +74,4 @@ script:
   - echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
   - PYTHONPATH=$PWD:$PYTHONPATH py.test tests;
 
+
