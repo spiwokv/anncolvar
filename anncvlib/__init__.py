@@ -240,9 +240,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[2].get_weights()[1][0]>0.0:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][0,]))
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][0,0]))
       else:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0,]))
+        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0,0]))
       toprint = "PRINT ARG=l2r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==3:
@@ -319,9 +319,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       if codecvs.layers[3].get_weights()[1][0]>0.0:
-        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0,]))
+        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0,0]))
       else:
-        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0,]))
+        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0,0]))
       toprint = "PRINT ARG=l3r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==4:
@@ -432,9 +432,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       ofile.write(toprint)
       #for i in range(encdim):
       if codecvs.layers[4].get_weights()[1][0]>0.0:
-        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0,]))
+        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0,0]))
       else:
-        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0,]))
+        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0,0]))
       toprint = "PRINT ARG=l4r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     ofile.close()
