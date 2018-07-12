@@ -239,7 +239,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
-      if codecvs.layers[2].get_weights()[1][0]>0.0:
+      if codecvs.layers[2].get_weights()[1][0,0]>0.0:
         ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][0,0]))
       else:
         ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0,0]))
@@ -318,7 +318,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
-      if codecvs.layers[3].get_weights()[1][0]>0.0:
+      if codecvs.layers[3].get_weights()[1][0,0]>0.0:
         ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0,0]))
       else:
         ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0,0]))
@@ -431,7 +431,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
       #for i in range(encdim):
-      if codecvs.layers[4].get_weights()[1][0]>0.0:
+      if codecvs.layers[4].get_weights()[1][0,0]>0.0:
         ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0,0]))
       else:
         ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0,0]))
