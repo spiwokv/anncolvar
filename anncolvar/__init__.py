@@ -17,14 +17,16 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
                           optim='adam', loss='mean_squared_error', epochs=100, batch=0,
                           ofilename='', modelfile='', plumedfile=''):
   try:
+    print("Loading trajectory")
     refpdb = md.load_pdb(intopname)
     traj = md.load(infilename, top=intopname)
+    print("Fitting trajectory")
     traj.superpose(refpdb)
   except:
     print("Cannot load %s or %s, exiting." % (infilename, intopname))
     exit(0)
   else:
-    print("%s succesfully loaded" % traj)
+    print("%s succesfully loaded and fitted" % traj)
   print("")
   
   # Conversion of the trajectory from Nframes x Natoms x 3 to Nframes x (Natoms x 3)
