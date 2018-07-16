@@ -193,7 +193,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
     ofile.write("WHOLEMOLECULES ENTITY0=1-%i\n" % np.max(atoms))
     ofile.write("FIT_TO_TEMPLATE STRIDE=1 REFERENCE=%s TYPE=OPTIMAL\n" % intopname)
     for i in range(trajsize[1]):
-      ofile.write("p%i: POSITION ATOM=%i\n" % (i+1,atoms[i]))
+      ofile.write("p%i: POSITION ATOM=%i NOPBC\n" % (i+1,atoms[i]))
     for i in range(trajsize[1]):
       ofile.write("p%ix: COMBINE ARG=p%i.x COEFFICIENTS=%f PERIODIC=NO\n" % (i+1,i+1,1.0/maxbox))
       ofile.write("p%iy: COMBINE ARG=p%i.y COEFFICIENTS=%f PERIODIC=NO\n" % (i+1,i+1,1.0/maxbox))
