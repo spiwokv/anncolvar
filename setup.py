@@ -20,7 +20,7 @@ setup(name='anncolvar',
       author='Vojtech Spiwok, ',
       author_email='spiwokv@vscht.cz',
       license='MIT',
-      packages=['anncvlib'],
+      packages=['anncolvar'],
       scripts=['bin/anncolvar'],
       install_requires=[
           'numpy',
