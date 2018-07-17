@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/spiwokv/anncolvar.svg?branch=master)](https://travis-ci.org/spiwokv/anncolvar)
+
 # anncolvar
 Collective variables by artificial neural networks
 
