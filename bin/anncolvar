@@ -11,7 +11,7 @@ for (name, short) in libnames:
   else:
     globals()[short] = lib
 
-import anncvlib
+import anncolvar
 
 # Parsing command line arguments
 parser = arg.ArgumentParser(description='Artificial neural network learning of collective variables of molecular systems, requires numpy, keras and mdtraj')
