@@ -154,11 +154,11 @@ modelfile = args.modelfile
 plumedfile = args.plumedfile
 if plumedfile[-4:] != '.dat':
   plumedfile = plumedfile + '.dat'
-anncvlib.anncollectivevariable(infilename, intopname, colvarname, column,
-                               boxx, boxy, boxz, atestset,
-                               shuffle, layers, layer1, layer2, layer3,
-                               actfun1, actfun2, actfun3,
-                               optim, loss, epochs, batch,
-                               ofilename, modelfile, plumedfile)
+anncolvar.anncollectivevariable(infilename, intopname, colvarname, column,
+                                boxx, boxy, boxz, atestset,
+                                shuffle, layers, layer1, layer2, layer3,
+                                actfun1, actfun2, actfun3,
+                                optim, loss, epochs, batch,
+                                ofilename, modelfile, plumedfile)
 
 
