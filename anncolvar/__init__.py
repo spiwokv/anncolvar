@@ -21,7 +21,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
     refpdb = md.load_pdb(intopname)
     traj = md.load(infilename, top=intopname)
     print("Fitting trajectory")
-    if nofit==0:
+    if nofit==1:
       traj.superpose(refpdb)
   except:
     print("Cannot load %s or %s, exiting." % (infilename, intopname))
