@@ -12,7 +12,7 @@ for (name, short) in libnames:
 
 def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
                           boxx=0.0, boxy=0.0, boxz=0.0, atestset=0.1,
-                          shuffle=1, layers=2, layer1=256, layer2=256, layer3=256,
+                          shuffle=1, nofit=0, layers=2, layer1=256, layer2=256, layer3=256,
                           actfun1='sigmoid', actfun2='sigmoid', actfun3='sigmoid',
                           optim='adam', loss='mean_squared_error', epochs=100, batch=0,
                           ofilename='', modelfile='', plumedfile=''):
@@ -21,7 +21,8 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
     refpdb = md.load_pdb(intopname)
     traj = md.load(infilename, top=intopname)
     print("Fitting trajectory")
-    traj.superpose(refpdb)
+    if nofit==0:
+      traj.superpose(refpdb)
   except:
     print("Cannot load %s or %s, exiting." % (infilename, intopname))
     exit(0)
