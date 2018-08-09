@@ -79,8 +79,8 @@ help='Number of epochs (default = 100, >1000 may be necessary for real life appl
 parser.add_argument('-batch', dest='batch', default=256, type=int,
 help='Batch size (0 = no batches, default = 256)')
 
-parser.add_argument('-o', dest='ofile', default='out.txt',
-help='Output file with original and approximated collective variables (txt, default = out.txt)')
+parser.add_argument('-o', dest='ofile', default='',
+help='Output file with original and approximated collective variables (txt, default = no output)')
 
 parser.add_argument('-model', dest='modelfile', default='',
 help='Prefix for output model files (experimental, default = no output)')
