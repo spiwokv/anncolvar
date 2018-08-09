@@ -158,8 +158,10 @@ batch = args.batch
 loss = args.loss
 if args.ofile[-4:] == '.txt':
   ofilename = args.ofile
-else:
+elif len(args.ofile)>0:
   ofilename = args.ofile + '.txt'
+else:
+  ofilename = ''
 modelfile = args.modelfile
 plumedfile = args.plumedfile
 if plumedfile[-4:] != '.dat':
