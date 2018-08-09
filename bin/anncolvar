@@ -38,7 +38,7 @@ parser.add_argument('-boxz', dest='boxz', default=0.0, type=float,
 help='Size of z coordinate of PBC box (from 0 to set value in nm)')
 
 parser.add_argument('-nofit', dest='nofit', default='False',
-help='Disable fitting, the trajectory must be properly fit (default False)')
+help='Disable fitting, the trajectory must be properly fited (default False)')
 
 parser.add_argument('-testset', dest='testset', default=0.10, type=float,
 help='Size of test set (fraction of the trajectory, default = 0.1)')
