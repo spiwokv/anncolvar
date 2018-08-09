@@ -39,6 +39,8 @@ optional arguments:
                       0.1)
   -shuffle SHUFFLE    Shuffle trajectory frames to obtain training and test
                       set (default True)
+  -nofit NOFIT        Disable fitting, the trajectory must be properly fited
+                      (default False)
   -layers LAYERS      Number of encoding layers (same as number of decoding,
                       allowed values 2-4, default = 2)
   -layer1 LAYER1      Number of neurons in the second encoding layer (default
