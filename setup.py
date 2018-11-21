@@ -4,6 +4,10 @@ def readme():
   with open('README.md') as f:
     return f.read()
 
+def readme():
+  with open('README.md') as f:
+    return f.read()
+
 setup(name='anncolvar',
       version='0.1',
       description='Coding collective variables by artificial neural networks',
@@ -23,12 +27,36 @@ setup(name='anncolvar',
       packages=['anncolvar'],
       scripts=['bin/anncolvar'],
       install_requires=[
-          'numpy',
-          'cython',
-          'mdtraj',
-          'keras',
-          'argparse',
-          'datetime',
+	  'absl-py',
+       	  'astor',
+	  'backports.weakref',
+	  'Cython',
+	  'DateTime',
+	  'enum',
+	  'enum34',
+	  'funcsigs',
+	  'futures',
+	  'gast',
+	  'grpcio',
+	  'h5py',
+	  'Keras',
+	  'Keras-Applications',
+	  'Keras-Preprocessing',
+	  'Markdown',
+	  'mdtraj',
+	  'mock',
+	  'numpy',
+	  'pbr',
+	  'protobuf',
+	  'pytz',
+	  'PyYAML',
+	  'scipy',
+	  'six',
+	  'tensorboard',
+	  'tensorflow',
+	  'termcolor',
+	  'Werkzeug',
+	  'zope.interface',
       ],
       include_package_data=True,
       zip_safe=False)
