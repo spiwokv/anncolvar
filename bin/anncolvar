@@ -46,17 +46,17 @@ help='Size of test set (fraction of the trajectory, default = 0.1)')
 parser.add_argument('-shuffle', dest='shuffle', default='True',
 help='Shuffle trajectory frames to obtain training and test set (default True)')
 
-parser.add_argument('-layers', dest='layers', default=2, type=int,
-help='Number of encoding layers (same as number of decoding, allowed values 2-4, default = 2)')
+parser.add_argument('-layers', dest='layers', default=1, type=int,
+help='Number of hidden layers (allowed values 1-3, default = 1)')
 
 parser.add_argument('-layer1', dest='layer1', default=256, type=int,
-help='Number of neurons in the second encoding layer (default = 256)')
+help='Number of neurons in the first encoding layer (default = 256)')
 
 parser.add_argument('-layer2', dest='layer2', default=256, type=int,
-help='Number of neurons in the third encoding layer (default = 256)')
+help='Number of neurons in the second encoding layer (default = 256)')
 
 parser.add_argument('-layer3', dest='layer3', default=256, type=int,
-help='Number of neurons in the fourth encoding layer (default = 256)')
+help='Number of neurons in the third encoding layer (default = 256)')
 
 parser.add_argument('-actfun1', dest='actfun1', default='sigmoid',
 help='Activation function of the first layer (default = sigmoid, for options see keras documentation)')
@@ -117,33 +117,33 @@ elif args.nofit == "False":
 else:
   print "ERROR: -nofit %s not understood" % args.nofit
   exit(0)
-if args.layers < 2 or args.layers > 4:
-  print "ERROR: -layers must be 2-4, for deeper learning contact authors"
+if args.layers < 1 or args.layers > 3:
+  print "ERROR: -layers must be 1-3, for deeper learning contact authors"
   exit(0)
 if args.layer1 > 1024:
-  print "WARNING: You plan to use %i neurons in the second layer, could be slow"
-if args.layers == 3:
+  print "WARNING: You plan to use %i neurons in the first layer, could be slow"
+if args.layers == 2:
   if args.layer2 > 1024:
-    print "WARNING: You plan to use %i neurons in the third layer, could be slow"
-if args.layers == 4:
+    print "WARNING: You plan to use %i neurons in the second layer, could be slow"
+if args.layers == 3:
   if args.layer3 > 1024:
-    print "WARNING: You plan to use %i neurons in the fourth layer, could be slow"
+    print "WARNING: You plan to use %i neurons in the third layer, could be slow"
 if args.actfun1 not in ['softmax','elu','selu','softplus','softsign','relu','tanh','sigmoid','hard_sigmoid','linear']:
   print "ERROR: cannot understand -actfun1 %s" % args.actfun1
   exit(0)
-if args.layers == 3:
+if args.layers == 2:
   if args.actfun2 not in ['softmax','elu','selu','softplus','softsign','relu','tanh','sigmoid','hard_sigmoid','linear']:
     print "ERROR: cannot understand -actfun2 %s" % args.actfun1
     exit(0)
-if args.layers == 4:
+if args.layers == 3:
   if args.actfun3 not in ['softmax','elu','selu','softplus','softsign','relu','tanh','sigmoid','hard_sigmoid','linear']:
     print "ERROR: cannot understand -actfun3 %s" % args.actfun3
     exit(0)
-if args.layers == 2 and args.actfun2!='linear':
-  print "ERROR: actfun2 must be linear for -layers 2"
+if args.layers == 1 and args.actfun2!='linear':
+  print "ERROR: actfun2 must be linear for -layers 1"
   exit(0)
-if args.layers == 3 and args.actfun3!='linear':
-  print "ERROR: actfun3 must be linear for -layers 3"
+if args.layers == 2 and args.actfun3!='linear':
+  print "ERROR: actfun3 must be linear for -layers 2"
   exit(0)
 layers = args.layers
 layer1 = args.layer1
