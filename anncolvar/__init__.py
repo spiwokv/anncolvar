@@ -12,7 +12,7 @@ for (name, short) in libnames:
 
 def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
                           boxx=0.0, boxy=0.0, boxz=0.0, atestset=0.1,
-                          shuffle=1, nofit=0, layers=2, layer1=256, layer2=256, layer3=256,
+                          shuffle=1, nofit=0, layers=1, layer1=256, layer2=256, layer3=256,
                           actfun1='sigmoid', actfun2='sigmoid', actfun3='sigmoid',
                           optim='adam', loss='mean_squared_error', epochs=100, batch=0,
                           ofilename='', modelfile='', plumedfile=''):
@@ -109,10 +109,10 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
   # (Deep) learning  
   input_coord = krs.layers.Input(shape=(trajsize[1]*3,))
   encoded = krs.layers.Dense(layer1, activation=actfun1, use_bias=True)(input_coord)
-  if layers == 4:
+  if layers == 2:
     encoded = krs.layers.Dense(layer2, activation=actfun2, use_bias=True)(encoded)
     encoded = krs.layers.Dense(layer3, activation=actfun3, use_bias=True)(encoded)
-  if layers == 3:
+  if layers == 2:
     encoded = krs.layers.Dense(layer2, activation=actfun2, use_bias=True)(encoded)
   encoded = krs.layers.Dense(1, activation='linear', use_bias=True)(encoded)
   codecvs = krs.models.Model(input_coord, encoded)
@@ -163,20 +163,20 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
     ofile.write("maxbox = %f\n" % maxbox)
     ofile.write("input_coord = krs.layers.Input(shape=(trajsize[1]*3,))\n")
     ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(input_coord)\n" % (layer1, actfun1))
-    if layers == 4:
+    if layers == 3:
       ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(encoded)\n" % (layer2, actfun2))
       ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(encoded)\n" % (layer3, actfun3))
-    if layers == 3:
+    if layers == 2:
       ofile.write("encoded = krs.layers.Dense(%i, activation='%s', use_bias=True)(encoded)\n" % (layer2, actfun2))
     ofile.write("encoded = krs.layers.Dense(1, activation='linear', use_bias=True)(encoded)\n")
     ofile.write("codecvs = krs.models.Model(input_coord, encoded)\n")
     ofile.close()
     print("Writing model weights and biases into %s_*.npy NumPy arrays" % modelfile)
     print("")
-    if layers == 2:
+    if layers == 1:
       np.save(file=modelfile+"_1.npy", arr=codecvs.layers[1].get_weights())
       np.save(file=modelfile+"_2.npy", arr=codecvs.layers[2].get_weights())
-    if layers == 3:
+    if layers == 2:
       np.save(file=modelfile+"_1.npy", arr=codecvs.layers[1].get_weights())
       np.save(file=modelfile+"_2.npy", arr=codecvs.layers[2].get_weights())
       np.save(file=modelfile+"_3.npy", arr=codecvs.layers[3].get_weights())
@@ -201,7 +201,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       ofile.write("p%ix: COMBINE ARG=p%i.x COEFFICIENTS=%f PERIODIC=NO\n" % (i+1,i+1,1.0/maxbox))
       ofile.write("p%iy: COMBINE ARG=p%i.y COEFFICIENTS=%f PERIODIC=NO\n" % (i+1,i+1,1.0/maxbox))
       ofile.write("p%iz: COMBINE ARG=p%i.z COEFFICIENTS=%f PERIODIC=NO\n" % (i+1,i+1,1.0/maxbox))
-    if layers==2:
+    if layers==1:
       for i in range(layer1):
         toprint = "l1_%i: COMBINE ARG=" % (i+1)
         for j in range(trajsize[1]):
@@ -248,7 +248,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0]))
       toprint = "PRINT ARG=l2r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
-    if layers==3:
+    if layers==2:
       for i in range(layer1):
         toprint = "l1_%i: COMBINE ARG=" % (i+1)
         for j in range(trajsize[1]):
@@ -327,7 +327,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0]))
       toprint = "PRINT ARG=l3r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
-    if layers==4:
+    if layers==3:
       for i in range(layer1):
         toprint = "l1_%i: COMBINE ARG=" % (i+1)
         for j in range(trajsize[1]):
