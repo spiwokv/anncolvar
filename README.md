@@ -5,12 +5,12 @@ Collective variables by artificial neural networks
 
 ```
 usage: anncolvar [-h] [-i INFILE] [-p INTOP] [-c COLVAR] [-col COL]
-                 [-boxx BOXX] [-boxy BOXY] [-boxz BOXZ] [-testset TESTSET]
-                 [-shuffle SHUFFLE] [-layers LAYERS] [-layer1 LAYER1]
-                 [-layer2 LAYER2] [-layer3 LAYER3] [-actfun1 ACTFUN1]
-                 [-actfun2 ACTFUN2] [-actfun3 ACTFUN3] [-optim OPTIM]
-                 [-loss LOSS] [-epochs EPOCHS] [-batch BATCH] [-o OFILE]
-                 [-model MODELFILE] [-plumed PLUMEDFILE]
+                 [-boxx BOXX] [-boxy BOXY] [-boxz BOXZ] [-nofit NOFIT]
+                 [-testset TESTSET] [-shuffle SHUFFLE] [-layers LAYERS]
+                 [-layer1 LAYER1] [-layer2 LAYER2] [-layer3 LAYER3]
+                 [-actfun1 ACTFUN1] [-actfun2 ACTFUN2] [-actfun3 ACTFUN3]
+                 [-optim OPTIM] [-loss LOSS] [-epochs EPOCHS] [-batch BATCH]
+                 [-o OFILE] [-model MODELFILE] [-plumed PLUMEDFILE]
 
 Artificial neural network learning of collective variables of molecular
 systems, requires numpy, keras and mdtraj
@@ -35,20 +35,20 @@ optional arguments:
                       nm)
   -boxz BOXZ          Size of z coordinate of PBC box (from 0 to set value in
                       nm)
+  -nofit NOFIT        Disable fitting, the trajectory must be properly fited
+                      (default False)
   -testset TESTSET    Size of test set (fraction of the trajectory, default =
                       0.1)
   -shuffle SHUFFLE    Shuffle trajectory frames to obtain training and test
                       set (default True)
-  -nofit NOFIT        Disable fitting, the trajectory must be properly fited
-                      (default False)
-  -layers LAYERS      Number of encoding layers (same as number of decoding,
-                      allowed values 2-4, default = 2)
-  -layer1 LAYER1      Number of neurons in the second encoding layer (default
-                      = 256)
-  -layer2 LAYER2      Number of neurons in the third encoding layer (default =
+  -layers LAYERS      Number of hidden layers (allowed values 1-3, default =
+                      1)
+  -layer1 LAYER1      Number of neurons in the first encoding layer (default =
                       256)
-  -layer3 LAYER3      Number of neurons in the fourth encoding layer (default
+  -layer2 LAYER2      Number of neurons in the second encoding layer (default
                       = 256)
+  -layer3 LAYER3      Number of neurons in the third encoding layer (default =
+                      256)
   -actfun1 ACTFUN1    Activation function of the first layer (default =
                       sigmoid, for options see keras documentation)
   -actfun2 ACTFUN2    Activation function of the second layer (default =
@@ -63,9 +63,10 @@ optional arguments:
                       for real life applications)
   -batch BATCH        Batch size (0 = no batches, default = 256)
   -o OFILE            Output file with original and approximated collective
-                      variables (txt, default = out.txt)
+                      variables (txt, default = no output)
   -model MODELFILE    Prefix for output model files (experimental, default =
                       no output)
   -plumed PLUMEDFILE  Output file for Plumed (default = plumed.dat)
+
 ```
  
