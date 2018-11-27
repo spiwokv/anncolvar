@@ -17,7 +17,7 @@ def test_it():
                                             intopname=myintopname,
                                             colvarname=mycolvarname,
                                             column=2, boxx=1.0, boxy=1.0, boxz=1.0,
-                                            atestset=0.1, shuffle=1, nofit=0, layers=4, layer1=16, layer2=8, layer3=4,
+                                            atestset=0.1, shuffle=1, nofit=0, layers=3, layer1=16, layer2=8, layer3=4,
                                             actfun1='sigmoid', actfun2='sigmoid', actfun3='sigmoid',
                                             optim='adam', loss='mean_squared_error', epochs=1000, batch=256,
                                             ofilename='', modelfile='', plumedfile='')
