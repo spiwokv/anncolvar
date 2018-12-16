@@ -29,6 +29,7 @@ setup(name='anncolvar',
           'keras',
           'argparse',
           'datetime',
+          'codecov',
       ],
       include_package_data=True,
       zip_safe=False)
