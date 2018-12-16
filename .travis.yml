@@ -66,6 +66,7 @@ install:
   - unzip ./openmpi_1.10-3.zip
   - sudo dpkg -i openmpi_1.10-3.deb
   - popd
+  - pip install codecov
 
 script:
   - export MKL_THREADING_LAYER="GNU"
@@ -73,5 +74,6 @@ script:
   - sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
   - echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
   - PYTHONPATH=$PWD:$PYTHONPATH py.test tests;
+  - codecov
 
 
