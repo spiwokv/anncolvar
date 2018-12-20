@@ -74,7 +74,7 @@ script:
   - python -c "import keras.backend"
   - sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
   - echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
-  - KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH py.test --cov=anncolvar tests/;
+  - KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH py.test --cov=anncolvar tests/test_it.py;
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
