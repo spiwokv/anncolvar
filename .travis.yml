@@ -46,16 +46,16 @@ install:
     elif [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then
       pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.3.1-cp36-cp36m-linux_x86_64.whl;
     fi
-  - if [[ "$KERAS_BACKEND" != "tensorflow" ]]; then
-      echo '    keras/backend/tensorflow_backend.py' >> .coveragerc;
-    fi
-  - if [[ "$KERAS_BACKEND" != "theano" ]]; then
-      echo '    keras/backend/theano_backend.py' >> .coveragerc;
-    fi
-  - if [[ "$KERAS_BACKEND" != "cntk" ]]; then
-      echo '    keras/backend/cntk_backend.py' >> .coveragerc;
-    fi
-  - sed -i "\/keras\/backend\/${KERAS_BACKEND}_backend.py/d" .coveragerc
+  #- if [[ "$KERAS_BACKEND" != "tensorflow" ]]; then
+  #    echo '    keras/backend/tensorflow_backend.py' >> .coveragerc;
+  #  fi
+  #- if [[ "$KERAS_BACKEND" != "theano" ]]; then
+  #    echo '    keras/backend/theano_backend.py' >> .coveragerc;
+  #  fi
+  #- if [[ "$KERAS_BACKEND" != "cntk" ]]; then
+  #    echo '    keras/backend/cntk_backend.py' >> .coveragerc;
+  #  fi
+  #- sed -i "\/keras\/backend\/${KERAS_BACKEND}_backend.py/d" .coveragerc;
   - export CORE_CHANGED=False;
   - for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
   - export APP_CHANGED=False;
