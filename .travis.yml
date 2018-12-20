@@ -55,6 +55,7 @@ install:
   - if [[ "$KERAS_BACKEND" != "cntk" ]]; then
       echo '    keras/backend/cntk_backend.py' >> .coveragerc;
     fi
+  - sed -i "\/keras\/backend\/${KERAS_BACKEND}_backend.py/d" .coveragerc
   - export CORE_CHANGED=False;
   - for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
   - export APP_CHANGED=False;
