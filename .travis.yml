@@ -58,6 +58,7 @@ install:
   - sudo dpkg -i openmpi_1.10-3.deb
   - popd
   - pip install codecov
+  - pip install plumed
 
 script:
   - export MKL_THREADING_LAYER="GNU"
