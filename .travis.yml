@@ -59,7 +59,7 @@ install:
   - popd
   - pip install codecov
   - git clone https://github.com/plumed/plumed2.git
-  - cd plumed2;./configure;make;make install
+  - cd plumed2;sudo ./configure;sudo make;sudo make install
 
 script:
   - export MKL_THREADING_LAYER="GNU"
