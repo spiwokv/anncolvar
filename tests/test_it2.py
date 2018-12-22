@@ -13,6 +13,7 @@ def test_it():
   myinfilename = os.path.join(os.path.dirname(__file__), 'traj_fit.xtc')
   myintopname = os.path.join(os.path.dirname(__file__), 'reference.pdb')
   mycolvarname = os.path.join(os.path.dirname(__file__), 'results_isomap')
+  myplumedname = os.path.join(os.path.dirname(__file__), 'test.dat')
   ae, cor = anncolvar.anncollectivevariable(infilename=myinfilename,
                                             intopname=myintopname,
                                             colvarname=mycolvarname,
@@ -20,7 +21,7 @@ def test_it():
                                             atestset=0.1, shuffle=1, nofit=0, layers=3, layer1=16, layer2=8, layer3=4,
                                             actfun1='sigmoid', actfun2='sigmoid', actfun3='sigmoid',
                                             optim='adam', loss='mean_squared_error', epochs=1000, batch=256,
-                                            ofilename='', modelfile='', plumedfile='test.dat')
+                                            ofilename='', modelfile='', plumedfile=myplumedname)
   
   command = "plumed driver --mf_pdb reference.pdb --plumed test.dat"
   os.system(command)
