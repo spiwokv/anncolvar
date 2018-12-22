@@ -58,6 +58,7 @@ install:
   - sudo dpkg -i openmpi_1.10-3.deb
   - popd
   - pip install codecov
+  - sudo apt-get install build-essential
   - export PLUMED_CC=gcc
   - export PLUMED_CXX=g++
   - git clone https://github.com/plumed/plumed2.git
