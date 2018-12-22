@@ -235,10 +235,10 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun1 == 'linear': printfun = "(x-%0.6f)" % (-onebias)
         ofile.write("l1r_%i: MATHEVAL ARG=l1_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       toprint = "l2: COMBINE ARG="
-      for j in range(layer1):
+      for j in range(layer2):
         toprint = toprint + "l1r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
-      for j in range(layer1):
+      for j in range(layer2):
         toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
@@ -314,10 +314,10 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           elif actfun2 == 'linear': printfun = "(x-%0.6f)" % (-onebias)
         ofile.write("l2r_%i: MATHEVAL ARG=l2_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       toprint = "l3: COMBINE ARG="
-      for j in range(layer2):
+      for j in range(layer3):
         toprint = toprint + "l2r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
-      for j in range(layer2):
+      for j in range(layer3):
         toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
@@ -426,10 +426,10 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         ofile.write("l3r_%i: MATHEVAL ARG=l3_%i FUNC=%s PERIODIC=NO\n" % (i+1,i+1,printfun))
       #for i in range(encdim):
       toprint = "l4: COMBINE ARG="
-      for j in range(layer3):
+      for j in range(layer4):
         toprint = toprint + "l3r_%i," % (j+1)
       toprint = toprint[:-1] + " COEFFICIENTS="
-      for j in range(layer3):
+      for j in range(layer4):
         toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[0][j])
       toprint = toprint[:-1] + " PERIODIC=NO\n"
       ofile.write(toprint)
