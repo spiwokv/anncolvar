@@ -109,7 +109,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
   # (Deep) learning  
   input_coord = krs.layers.Input(shape=(trajsize[1]*3,))
   encoded = krs.layers.Dense(layer1, activation=actfun1, use_bias=True)(input_coord)
-  if layers == 2:
+  if layers == 3:
     encoded = krs.layers.Dense(layer2, activation=actfun2, use_bias=True)(encoded)
     encoded = krs.layers.Dense(layer3, activation=actfun3, use_bias=True)(encoded)
   if layers == 2:
