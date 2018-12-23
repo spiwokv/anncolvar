@@ -72,6 +72,7 @@ install:
   - ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) CXXFLAGS="$PLUMED_CXXFLAGS" LDFLAGS="$PLUMED_LDFLAGS" CPPFLAGS="$PLUMED_CPPFLAGS" $CONFIG_FLAGS --prefix="$HOME/opt"
   - make -j 4
   - make install
+  - cd ..
 
 script:
   - export MKL_THREADING_LAYER="GNU"
