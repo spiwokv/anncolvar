@@ -65,7 +65,7 @@ install:
   - sudo dpkg -i openmpi_1.10-3.deb
   - popd
   - pip install codecov;
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./.travis/install.ccache v3.5 ; fi
+  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./.travis/install.ccache v3.5 ; fi
   - ccache -s
   - git clone https://github.com/plumed/plumed2.git
   - cd plumed2
