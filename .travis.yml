@@ -6,17 +6,17 @@ cache: ccache
 matrix:
     include:
         - python: 2.7
-          env: KERAS_BACKEND=tensorflow PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+          env: KERAS_BACKEND=tensorflow #PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
         - python: 3.6
-          env: KERAS_BACKEND=tensorflow PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+          env: KERAS_BACKEND=tensorflow #PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
         - python: 2.7
-          env: KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+          env: KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile #PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
         - python: 3.6
-          env: KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+          env: KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile #PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
         - python: 2.7
-          env: KERAS_BACKEND=cntk PYTHONWARNINGS=ignore PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+          env: KERAS_BACKEND=cntk PYTHONWARNINGS=ignore PLUMED_CC=gcc #PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
         - python: 3.6
-          env: KERAS_BACKEND=cntk PYTHONWARNINGS=ignore PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+          env: KERAS_BACKEND=cntk PYTHONWARNINGS=ignore PLUMED_CC=gcc #PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
 install:
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
       wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
