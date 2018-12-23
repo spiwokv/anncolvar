@@ -6,16 +6,22 @@ matrix:
     include:
         - python: 2.7
           env: KERAS_BACKEND=tensorflow
+          env: PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
         - python: 3.6
           env: KERAS_BACKEND=tensorflow
+          env: PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
         - python: 2.7
           env: KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile
+          env: PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
         - python: 3.6
           env: KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile
+          env: PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
         - python: 2.7
           env: KERAS_BACKEND=cntk PYTHONWARNINGS=ignore
+          env: PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
         - python: 3.6
           env: KERAS_BACKEND=cntk PYTHONWARNINGS=ignore
+          env: PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
 install:
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
       wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -58,8 +64,15 @@ install:
   - sudo dpkg -i openmpi_1.10-3.deb
   - popd
   - pip install codecov
+   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      ./.travis/install.ccache v3.5 ;
+    fi
+  - ccache -s ;
   - git clone https://github.com/plumed/plumed2.git
-  - cd plumed2;sudo ./configure;sudo make;sudo make install
+  - cd plumed2;
+  - ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) CXXFLAGS="$PLUMED_CXXFLAGS" LDFLAGS="$PLUMED_LDFLAGS" CPPFLAGS="$PLUMED_CPPFLAGS" $CONFIG_FLAGS --prefix="$HOME/opt";
+  - make -j 4;
+  - make install;
 
 script:
   - export MKL_THREADING_LAYER="GNU"
