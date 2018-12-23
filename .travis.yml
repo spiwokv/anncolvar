@@ -52,9 +52,9 @@ install:
     elif [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then
       pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.3.1-cp36-cp36m-linux_x86_64.whl;
     fi
-  - export CORE_CHANGED=False;
+  - export CORE_CHANGED=False
   - for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
-  - export APP_CHANGED=False;
+  - export APP_CHANGED=False
   - for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
   - rm -rf ~/mpi
   - mkdir ~/mpi
@@ -65,12 +65,12 @@ install:
   - popd
   - pip install codecov;
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./.travis/install.ccache v3.5 ; fi
-  - ccache -s ;
-  - git clone https://github.com/plumed/plumed2.git;
-  - cd plumed2;
-  - ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) CXXFLAGS="$PLUMED_CXXFLAGS" LDFLAGS="$PLUMED_LDFLAGS" CPPFLAGS="$PLUMED_CPPFLAGS" $CONFIG_FLAGS --prefix="$HOME/opt";
-  - make -j 4;
-  - make install;
+  - ccache -s
+  - git clone https://github.com/plumed/plumed2.git
+  - cd plumed2
+  - ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) CXXFLAGS="$PLUMED_CXXFLAGS" LDFLAGS="$PLUMED_LDFLAGS" CPPFLAGS="$PLUMED_CPPFLAGS" $CONFIG_FLAGS --prefix="$HOME/opt"
+  - make -j 4
+  - make install
 
 script:
   - export MKL_THREADING_LAYER="GNU"
