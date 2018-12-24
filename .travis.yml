@@ -59,7 +59,6 @@ install:
   - sudo dpkg -i openmpi_1.10-3.deb
   - popd
   - pip install codecov
-  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./.travis/install.ccache v3.5 ; fi
   - ccache -s
   - git clone https://github.com/plumed/plumed2.git
   - cd plumed2
@@ -73,7 +72,7 @@ script:
   - python -c "import keras.backend"
   - sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
   - echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
-  - KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH py.test --cov=anncolvar tests/test_it.py;
+  - KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH py.test --cov=anncolvar tests/;
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
