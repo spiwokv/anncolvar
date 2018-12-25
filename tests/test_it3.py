@@ -28,7 +28,7 @@ def test_it():
   ifile = open("COLVAR", "r").readlines()
   sline = str.split(ifile[1])
   x = float(sline[1])
-  assert((x > 0.305) and (x < 0.315))
+  assert((x > 0.30) and (x < 0.32))
 
 if __name__ == '__main__':
   pytest.main([__file__])
