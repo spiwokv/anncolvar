@@ -66,6 +66,8 @@ install:
   - make -j 4
   - make install
   - cd ..
+  - export PATH=$PATH:/home/travis/opt/bin/
+  - export PLUMED_KERNEL=/home/travis/opt/lib/libplumedKernel.so
 
 script:
   - export MKL_THREADING_LAYER="GNU"
