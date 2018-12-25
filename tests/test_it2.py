@@ -26,8 +26,9 @@ def test_it():
   command = "plumed driver --mf_pdb "+myintopname+" --plumed "+myplumedname
   os.system(command)
   ifile = open("COLVAR", "r").readlines()
-  print(ifile)
-  assert(cor > 0.99)
+  sline = str.split(ifile[1])
+  x = float(sline[1])
+  assert(x > 0.305 && x < 0.315)
 
 if __name__ == '__main__':
   pytest.main([__file__])
