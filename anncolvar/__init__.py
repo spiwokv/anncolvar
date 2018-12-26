@@ -1,3 +1,5 @@
+name = "anncolvar"
+
 # Loading necessary libraries
 libnames = [('mdtraj', 'md'), ('numpy', 'np'), ('keras', 'krs'), ('argparse', 'arg'), ('datetime', 'dt'), ('sys', 'sys')]
 
