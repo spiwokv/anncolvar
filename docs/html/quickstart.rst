@@ -12,7 +12,7 @@ analysed atoms only) into the file traj_fit.xtc, its structure in PDB format in 
 (space separated file with structure number in the first column and collective variables in
 second, third, fourth and fifth column). Next type::
 
- anncolvar -p reference.pdb -c results_isomap -col 2 -boxx 1 -boxy 1 -boxz 1 \
+ anncolvar -i traj_fit.xtc -p reference.pdb -c results_isomap -col 2 -boxx 1 -boxy 1 -boxz 1 \
            -layers 3 -layer1 16 -layer2 8 -layer3 4 -actfun1 sigmoid -actfun2 sigmoid -actfun3 sigmoid \
            -optim adam -loss mean_squared_error -epochs 1000 -batch 256 \
            -o low.txt -model model -plumed plumed.dat
