@@ -1,3 +1,4 @@
+[![PyPI](https://img.shields.io/anncolvar/v/pip.svg)](https://pypi.org/project/anncolvar/)
 [![Build Status](https://travis-ci.org/spiwokv/anncolvar.svg?branch=master)](https://travis-ci.org/spiwokv/anncolvar)
 [![codecov](https://codecov.io/gh/spiwokv/anncolvar/branch/master/graph/badge.svg)](https://codecov.io/gh/spiwokv/anncolvar/)
 
