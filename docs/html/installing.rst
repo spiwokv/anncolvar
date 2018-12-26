@@ -8,13 +8,7 @@ Prerequisite
 Anncolvar requires one of three machine learning beckends, either
 Tensorflow, Theano or CNTK (all tested by continuous integration
 services). Chose one of beckends and install by following these
-sites:
-
-`TensorFlow`_
-
-`Theano`_
-
-`CNTK`_
+sites: `TensorFlow`_, `Theano`_ or `CNTK`_
 
 
 Installing with pip
