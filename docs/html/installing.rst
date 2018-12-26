@@ -10,11 +10,11 @@ Tensorflow, Theano or CNTK (all tested by continuous integration
 services). Chose one of beckends and install by following these
 sites:
 
-`TensorFlow<https://www.tensorflow.org/install/>`
+`TensorFlow`_
 
-`Theano<http://deeplearning.net/software/theano/install.html>`
+`Theano`_
 
-`CNTK<https://docs.microsoft.com/en-us/cognitive-toolkit/setup-cntk-on-your-machine>`
+`CNTK`_
 
 
 Installing with pip
@@ -50,4 +50,10 @@ Compatibility
 
 Anncolvar requires Python libraries sys, datetime, argparse, numpy, mdtraj and keras.
 Keras must run on one of three backends: Tensorflow, Theano or CNTK.
+
+.. _TensorFlow https://www.tensorflow.org/install/
+
+.. _Theano http://deeplearning.net/software/theano/install.html
+
+.. _CNTK https://docs.microsoft.com/en-us/cognitive-toolkit/setup-cntk-on-your-machine
 
