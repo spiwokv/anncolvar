@@ -100,9 +100,13 @@ CNTK. For this follow one of these links:
 - CNTK_
 
 
-Next, install anncolvar by PIP pip install anncolvar
+Next, install anncolvar by PIP::
 
-If you use Anaconda type conda install -c spiwokv anncolvar
+  pip install anncolvar
+
+If you use Anaconda type::
+
+  conda install -c spiwokv anncolvar
 
 Usage
 =====
