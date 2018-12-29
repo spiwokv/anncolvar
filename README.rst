@@ -1,7 +1,4 @@
-[![PyPI](https://img.shields.io/pypi/v/anncolvar.svg)](https://pypi.org/project/anncolvar/)
-[![Anaconda](https://anaconda.org/spiwokv/anncolvar/badges/version.svg)](https://anaconda.org/spiwokv/anncolvar)
-[![Build Status](https://travis-ci.org/spiwokv/anncolvar.svg?branch=master)](https://travis-ci.org/spiwokv/anncolvar)
-[![codecov](https://codecov.io/gh/spiwokv/anncolvar/branch/master/graph/badge.svg)](https://codecov.io/gh/spiwokv/anncolvar/)
+|PyPI| |Anaconda| |BuildStatus| |codecov|
 
 *********
 anncolvar
@@ -73,5 +70,18 @@ Collective variables by artificial neural networks::
                         no output)
     -plumed PLUMEDFILE  Output file for Plumed (default = plumed.dat)
 
+.. |PyPI| image:: https://img.shields.io/pypi/v/anncolvar.svg
+    :target: https://pypi.org/project/anncolvar/
+    :alt: Latest version released on PyPI
 
+.. |Anaconda| image:: https://anaconda.org/spiwokv/anncolvar/badges/version.svg
+    :target: https://anaconda.org/spiwokv/anncolvar
+    :alt: Latest version released on Anaconda Cloud
 
+.. |BuildStatus| image:: https://travis-ci.org/spiwokv/anncolvar.svg?branch=master
+    :target: http://travis-ci.org/jakubroztocil/httpie
+    :alt: Build status of the master branch on Mac/Linux at Travis-CI
+
+.. |codecov| image:: https://codecov.io/gh/spiwokv/anncolvar/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/spiwokv/anncolvar/
+    :alt: Code coverage
