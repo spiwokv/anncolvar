@@ -94,16 +94,15 @@ Installation
 
 You have to chose and install one of keras backends, such as Tensorflow, Theano or
 CNTK. For this follow one of these links:
+
 - TensorFlow_
 - Theano_
 - CNTK_
 
 
-Next, install anncolvar by PIP::
-  pip install anncolvar
+Next, install anncolvar by PIP pip install anncolvar
 
-If you use Anaconda type::
-  conda install -c spiwokv anncolvar
+If you use Anaconda type conda install -c spiwokv anncolvar
 
 Usage
 =====
