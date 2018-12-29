@@ -79,7 +79,7 @@ Collective variables by artificial neural networks::
     :alt: Latest version released on Anaconda Cloud
 
 .. |BuildStatus| image:: https://travis-ci.org/spiwokv/anncolvar.svg?branch=master
-    :target: http://travis-ci.org/jakubroztocil/httpie
+    :target: http://travis-ci.org/spiwokv/anncolvar/
     :alt: Build status of the master branch on Mac/Linux at Travis-CI
 
 .. |codecov| image:: https://codecov.io/gh/spiwokv/anncolvar/branch/master/graph/badge.svg
