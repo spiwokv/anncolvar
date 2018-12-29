@@ -20,13 +20,13 @@ Collective variables by artificial neural networks::
   optional arguments:
     -h, --help          show this help message and exit
     -i INFILE           Input trajectory in pdb, xtc, trr, dcd, netcdf or mdcrd,
-                        WARNING: the trajectory must be 1. centered in the PBC
-                        box, 2. fitted to a reference structure and 3. must
-                        contain only atoms to be analysed!
+                        WARNING: the trajectory must be 1. must contain only atoms
+                        to be analyzed, 2. must not contain any periodic boundary
+                        condition issues!
     -p INTOP            Input topology in pdb, WARNING: the structure must be 1.
                         centered in the PBC box and 2. must contain only atoms
-                        to be analysed!
-    -c COLVAR           Input collective variable file in text formate, must
+                        to be analyzed!
+    -c COLVAR           Input collective variable file in text format, must
                         contain the same number of lines as frames in the
                         trajectory
     -col COL            The index of the column containing collective variables
@@ -70,6 +70,103 @@ Collective variables by artificial neural networks::
                         no output)
     -plumed PLUMEDFILE  Output file for Plumed (default = plumed.dat)
 
+Introduction
+============
+
+Biased simulations, such as metadynamics, use a predefined set of parameters known
+as collective variables. An artificial bias force is applied on collective variables
+to enhance sampling. There are two conditions for a parameter to be applied as
+a collective variable. First, the value of the collective variables can be calculated
+solely from atomic coordinates. Second, the force acting on collective variables
+can be converted to the force acting on individual atoms. In the other words, it
+is possible to calculate the first derivative of the collective variables with
+respect to atomic coordinates. Both calculations must be fast enough, because
+they must be evaluated in every step of the simulation.
+
+There are many potential collective variables that cannot be easily calculated.
+It is possible to calculate the collective variable for hundreds or thousands of
+structures, but not for millions of structures (which is necessary for nanosecond
+long simulations). *anncolvar* can approximate such collective variables using
+a neural network.
+
+Installation
+============
+
+You have to chose and install one of keras backends, such as Tensorflow, Theano or
+CNTK. For this follow one of these links:
+
+`TensorFlow`_
+
+`Theano`_
+
+`CNTK`_
+
+Next, install anncolvar by PIP::
+  pip install anncolvar
+
+If you use Anaconda type::
+  conda install -c spiwokv anncolvar
+
+Usage
+=====
+
+A series of representative structures (hundreds or more) with pre-calculated values
+of the collective variable is used to train the neural network. The user can specify
+the input set of reference structures (*-i*) in the form of a trajectory in pdb, xtc,
+trr, dcd, netcdf or mdcrd. The trajectory must contain only atoms to be analyzed
+(for example only non-hydrogen atoms). The trajectory must not contain any periodic
+boundary condition issues. Both conversions can be made by molecular dynamics
+simulation packages, for example by *gmx trjconv*. It is not necessary to fit
+frames to a reference structure. It is possible to switch fitting off by
+*-nofit True*.
+
+It is necessary to supply an input topology in PDB. This is a structure used
+as a template for fitting. It is also used to define a box. This box must be large
+enough to fit the molecule in all frames of the trajectory. It should not be too
+large because this suppresses non-linearity in the neural network. When the user
+decides to use a 3x3x3 nm box it is necessary to place the molecule to be centered
+at coordinates (1.5,1.5,1.5) nm. In Gromacs it is possible to use::
+  gmx editconf -f mol.pdb -o reference.pdb -c -box 3 3 3
+It must also contain only atoms to be analyzed. Size of the box can be specified
+by parameters *-boxx*, *-boxy* and *-boxz* (in nm).
+
+Last input file is the collective variable file. It is a space-separated text
+file with the same number of lines as the number of frames in the input trajectory.
+The index of the column can be specified by *-col* (e.g. *-col 2* for the second
+column of the file.
+
+The option *-testset* can control the fraction of the trajectory used as
+the test set. For example *-testset 0.1* means that 10 % of input data is used
+as the test set and 90 % as the training set. The option *-shuffle True* causes
+that first 90 % is used as the training set and remaining 10 % as the test set.
+Otherwise frames are shuffled before separation to the training and test set.
+
+The architecture of the neural network is controlled by multiple parameters.
+The input layer contains 3N neurons (where N is the number of atoms). The number
+of hidden layers is controlled by *-layers*. This can be 1, 2 or 3. For higher
+number of layers contact the authors. Number of neurons in the first, second and
+third layer is controlled by *-layer1*, *-layer2* and *-layer3*. It is useful
+to use the number of layers equal to powers of 2 (32, 64, 128 etc.). Huge numbers
+of neurons can cause that the program is slow or run out of memory. Activation
+functions of neurons can be controlled by *-actfun1*, *-actfun2* and *-actfun3*.
+Any activation function supported by keras can be used.
+
+The optimizer used in the training process can be controlled by *-optim*. The
+default ADAM optimizer (*-optim adam*) works well. The loss function can be
+controlled by *-loss*. The default *-loss mean_squared_error* works well. The
+number of epochs can be controlled by *-epochs*. The default value (100) is
+quite little, usually >1000 is necessary for real life applications. The batch
+size can be controlled by *-batch* (*-batch 0* for no batches, default is 256).
+
+Output is written into the text file *-o*. It contains the approximated and
+the original values of collective variable. The model can be stored in the set
+of text files (try *-model*). The input file is printed into the file controlled
+by *-plumed* (by default plumed.dat). This file can be directly used to calculate
+the evolution of the collective variable by *plumed driver* or by Plumed-patched
+molecular dynamics engine. To use the collective variable in enhances sampling
+(for example metadynamics) it is necessary to add a suitable keyword (for example
+METAD).
+
 .. |PyPI| image:: https://img.shields.io/pypi/v/anncolvar.svg
     :target: https://pypi.org/project/anncolvar/
     :alt: Latest version released on PyPI
@@ -85,3 +182,10 @@ Collective variables by artificial neural networks::
 .. |codecov| image:: https://codecov.io/gh/spiwokv/anncolvar/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/spiwokv/anncolvar/
     :alt: Code coverage
+
+.. _TensorFlow: https://www.tensorflow.org/install/
+
+.. _Theano: http://deeplearning.net/software/theano/install.html
+
+.. _CNTK: https://docs.microsoft.com/en-us/cognitive-toolkit/setup-cntk-on-your-machine
+
