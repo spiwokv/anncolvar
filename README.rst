@@ -95,12 +95,11 @@ Installation
 You have to chose and install one of keras backends, such as Tensorflow, Theano or
 CNTK. For this follow one of these links:
 
-`TensorFlow`_
+- `TensorFlow`_
 
-`Theano`_
+- `Theano`_
 
-`CNTK`_
-
+- `CNTK`_
 
 Next, install anncolvar by PIP::
   pip install anncolvar
