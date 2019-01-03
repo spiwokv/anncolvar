@@ -4,8 +4,6 @@
 anncolvar
 *********
 
-Usage
-============
 Collective variables by artificial neural networks::
 
   usage: anncolvar [-h] [-i INFILE] [-p INTOP] [-c COLVAR] [-col COL]
