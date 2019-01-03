@@ -4,6 +4,14 @@
 anncolvar
 *********
 
+Installation
+============
+```
+pip install numpy cython
+pip install .
+```
+
+
 Collective variables by artificial neural networks::
 
   usage: anncolvar [-h] [-i INFILE] [-p INTOP] [-c COLVAR] [-col COL]
