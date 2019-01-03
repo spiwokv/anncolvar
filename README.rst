@@ -6,12 +6,14 @@ anncolvar
 
 Installation
 ============
-```
-pip install numpy cython
-pip install .
-```
 
+To install anncolvar, run these commands::
 
+  pip install numpy cython
+  pip install .
+
+Usage
+============
 Collective variables by artificial neural networks::
 
   usage: anncolvar [-h] [-i INFILE] [-p INTOP] [-c COLVAR] [-col COL]
