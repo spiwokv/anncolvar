@@ -99,6 +99,9 @@ CNTK. For this follow one of these links:
 - Theano_
 - CNTK_
 
+Install numpy and cython by PIP::
+
+  pip install numpy cython
 
 Next, install anncolvar by PIP::
 
