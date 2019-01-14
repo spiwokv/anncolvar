@@ -12,7 +12,6 @@ Keras-Preprocessing==1.0.5
 mdtraj==1.9.2
 numpy==1.15.4
 pytz==2018.7
-PyYAML==3.13
 requests==2.21.0
 scipy==1.2.0
 six==1.12.0
