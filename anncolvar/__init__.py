@@ -60,7 +60,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
     print("ERROR: Some of atom has coordinate higher than box size (i.e. it is outside the box)")
     exit(0)
   
-  if boxx > 2.0*np.amax(traj.xyz[:,:,0]) or boxy > 2.0*np.amax(traj.xyz[:,:,0]) or boxz > 2.0*np.amax(traj.xyz[:,:,0]):
+  if boxx > 2.0*np.amax(traj.xyz[:,:,0]) or boxy > 2.0*np.amax(traj.xyz[:,:,1]) or boxz > 2.0*np.amax(traj.xyz[:,:,2]):
     print("WARNING: Box size is bigger than 2x of highest coordinate,")
     print("maybe the box is too big or the molecule is not centered")
   
