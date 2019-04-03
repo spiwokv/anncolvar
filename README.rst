@@ -1,5 +1,8 @@
 |PyPI| |Anaconda| |BuildStatus| |codecov|
 
+Read more in 
+D. Trapl, I. Horvaćanin, V. Mareška, F. Özçelik, G. Unal and V. Spiwok: `anncolvar: Approximation of Complex Collective Variables by Artificial Neural Networks for Analysis and Biasing of Molecular Simulations <https://www.frontiersin.org/articles/10.3389/fmolb.2019.00025/>`_ Front. Mol. Biosci. accepted (doi: 10.3389/fmolb.2019.00025)
+
 *********
 anncolvar
 *********
@@ -192,4 +195,3 @@ METAD).
 .. _Theano: http://deeplearning.net/software/theano/install.html
 
 .. _CNTK: https://docs.microsoft.com/en-us/cognitive-toolkit/setup-cntk-on-your-machine
-
