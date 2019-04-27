@@ -80,6 +80,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         if len(sline) >= column:
           try:
             cvs.append(float(sline[column-1]))
+          except ValueError:
+            print("Cannot read %s." % colvarname)
+            exit(0)
           except:
             print("Cannot read %s." % colvarname)
             exit(0)
