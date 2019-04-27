@@ -1,4 +1,6 @@
-|PyPI| |Anaconda| |BuildStatus| |codecov|
+|PyPI| |Anaconda| |BuildStatus| |codecov| |lgtm| |lgtmpy|
+
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/spiwokv/anncolvar.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/spiwokv/anncolvar/alerts/)
 
 Read more in 
 D. Trapl, I. Horvaćanin, V. Mareška, F. Özçelik, G. Unal and V. Spiwok: `anncolvar: Approximation of Complex Collective Variables by Artificial Neural Networks for Analysis and Biasing of Molecular Simulations <https://www.frontiersin.org/articles/10.3389/fmolb.2019.00025/>`_ *Front. Mol. Biosci.*  2019, **6**, 25 (doi: 10.3389/fmolb.2019.00025)
@@ -190,8 +192,17 @@ METAD).
     :target: https://codecov.io/gh/spiwokv/anncolvar/
     :alt: Code coverage
 
+.. |lgtm| image:: https://img.shields.io/lgtm/alerts/g/spiwokv/anncolvar.svg?logo=lgtm&logoWidth=18
+    :target: https://lgtm.com/projects/g/spiwokv/anncolvar/alerts/
+    :alt: LGTM code alerts
+
+.. |lgtmpy| image:: https://img.shields.io/lgtm/grade/python/g/spiwokv/anncolvar.svg?logo=lgtm&logoWidth=18
+    :target: https://lgtm.com/projects/g/spiwokv/anncolvar/context:python
+    :alt: LGTM python quality
+
 .. _TensorFlow: https://www.tensorflow.org/install/
 
 .. _Theano: http://deeplearning.net/software/theano/install.html
 
 .. _CNTK: https://docs.microsoft.com/en-us/cognitive-toolkit/setup-cntk-on-your-machine
+
