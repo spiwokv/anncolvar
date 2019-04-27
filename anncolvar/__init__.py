@@ -6,8 +6,8 @@ libnames = [('mdtraj', 'md'), ('numpy', 'np'), ('keras', 'krs'), ('argparse', 'a
 for (name, short) in libnames:
   try:
     lib = __import__(name)
-  except:
-    print("Library %s is not installed, exiting" % name)
+  except ImportError:
+    print("Library %s cannot be loaded, exiting" % name)
     exit(0)
   else:
     globals()[short] = lib
@@ -25,7 +25,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
     print("Fitting trajectory")
     if nofit==0:
       traj.superpose(refpdb)
-  except:
+  except IOError:
     print("Cannot load %s or %s, exiting." % (infilename, intopname))
     exit(0)
   else:
@@ -69,7 +69,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
   # Checking colvar file
   try:
     cvfile = open(colvarname, 'r').readlines()
-  except:
+  except IOError:
     print("Cannot load %s, exiting." % colvarname)
     exit(0)
   cvs = []
