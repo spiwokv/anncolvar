@@ -5,8 +5,8 @@ libnames = [('mdtraj', 'md'), ('numpy', 'np'), ('keras', 'krs'), ('argparse', 'a
 for (name, short) in libnames:
   try:
     lib = __import__(name)
-  except:
-    print("Library %s is not installed, exiting" % name)
+  except ImportError:
+    print("Library %s is cannot be loaded, exiting" % name)
     exit(0)
   else:
     globals()[short] = lib
