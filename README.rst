@@ -1,7 +1,5 @@
 |PyPI| |Anaconda| |BuildStatus| |codecov| |lgtm| |lgtmpy|
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/spiwokv/anncolvar.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/spiwokv/anncolvar/alerts/)
-
 Read more in 
 D. Trapl, I. Horvaćanin, V. Mareška, F. Özçelik, G. Unal and V. Spiwok: `anncolvar: Approximation of Complex Collective Variables by Artificial Neural Networks for Analysis and Biasing of Molecular Simulations <https://www.frontiersin.org/articles/10.3389/fmolb.2019.00025/>`_ *Front. Mol. Biosci.*  2019, **6**, 25 (doi: 10.3389/fmolb.2019.00025)
 
