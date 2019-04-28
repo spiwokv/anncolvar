@@ -83,9 +83,6 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
           except ValueError:
             print("Cannot read %s." % colvarname)
             exit(0)
-          except:
-            print("Cannot read %s." % colvarname)
-            exit(0)
   if len(cvs) != trajsize[0]:
     print("File %s contains %i values, but %s contains %i frames, exiting." % (colvarname, len(cvs), infilename, trajsize[0]))
     exit(0)
