@@ -1,4 +1,4 @@
-|PyPI| |Anaconda| |BuildStatus| |codecov| |lgtm| |lgtmpy|
+|PyPI| |Anaconda| |BuildStatus| |codecov| |lgtm| |lgtmpy| |nest|
 
 Read more in 
 D. Trapl, I. Horvaćanin, V. Mareška, F. Özçelik, G. Unal and V. Spiwok: `anncolvar: Approximation of Complex Collective Variables by Artificial Neural Networks for Analysis and Biasing of Molecular Simulations <https://www.frontiersin.org/articles/10.3389/fmolb.2019.00025/>`_ *Front. Mol. Biosci.*  2019, **6**, 25 (doi: 10.3389/fmolb.2019.00025)
@@ -197,6 +197,10 @@ METAD).
 .. |lgtmpy| image:: https://img.shields.io/lgtm/grade/python/g/spiwokv/anncolvar.svg?logo=lgtm&logoWidth=18
     :target: https://lgtm.com/projects/g/spiwokv/anncolvar/context:python
     :alt: LGTM python quality
+    
+.. |nest| image:: https://www.plumed-nest.org/eggs/19/008/badge.svg
+    :target: https://www.plumed-nest.org/eggs/19/008/
+    :alt: Plumed Nest ID: 008 
 
 .. _TensorFlow: https://www.tensorflow.org/install/
 
