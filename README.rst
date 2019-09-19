@@ -203,7 +203,7 @@ METAD).
     :target: https://www.plumed-nest.org/eggs/19/008/
     :alt: Plumed Nest ID: 008 
 
-.. |DOI| image:: https://zenodo.org/badge/DOI/10.3389/fmolb.2019.00025 
+.. |DOI| image:: https://zenodo.org/badge/DOI/10.3389/fmolb.2019.00025/btu153.svg
     :target: https://doi.org/10.3389/fmolb.2019.00025 
     :alt: DOI: 10.3389/fmolb.2019.00025 
 
