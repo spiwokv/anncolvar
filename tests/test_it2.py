@@ -14,6 +14,7 @@ def test_it():
   myintopname = os.path.join(os.path.dirname(__file__), 'reference.pdb')
   mycolvarname = os.path.join(os.path.dirname(__file__), 'results_isomap')
   myplumedname = os.path.join(os.path.dirname(__file__), 'test.dat')
+  myplumedname2 = os.path.join(os.path.dirname(__file__), 'test2.dat')
   ae, cor = anncolvar.anncollectivevariable(infilename=myinfilename,
                                             intopname=myintopname,
                                             colvarname=mycolvarname,
