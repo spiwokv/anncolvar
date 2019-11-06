@@ -20,7 +20,7 @@ def test_it():
                                             colvarname=mycolvarname,
                                             column=2, boxx=1.0, boxy=1.0, boxz=1.0,
                                             atestset=0.1, shuffle=1, nofit=0, layers=1, layer1=16, layer2=8, layer3=4,
-                                            actfun1='sigmoid', actfun2='linear', actfun3='linear',
+                                            actfun1='tanh', actfun2='linear', actfun3='linear',
                                             optim='adam', loss='mean_squared_error', epochs=1000, batch=256,
                                             ofilename='', modelfile='', plumedfile=myplumedname, plumedfile2=myplumedname2)
   
