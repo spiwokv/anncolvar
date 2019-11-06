@@ -14,6 +14,7 @@ def test_it():
   myintopname = os.path.join(os.path.dirname(__file__), 'reference.pdb')
   mycolvarname = os.path.join(os.path.dirname(__file__), 'results_isomap')
   myplumedname = os.path.join(os.path.dirname(__file__), 'test.dat')
+  myplumedname2 = os.path.join(os.path.dirname(__file__), 'test2.dat')
   ae, cor = anncolvar.anncollectivevariable(infilename=myinfilename,
                                             intopname=myintopname,
                                             colvarname=mycolvarname,
@@ -21,9 +22,9 @@ def test_it():
                                             atestset=0.1, shuffle=1, nofit=0, layers=1, layer1=16, layer2=8, layer3=4,
                                             actfun1='sigmoid', actfun2='linear', actfun3='linear',
                                             optim='adam', loss='mean_squared_error', epochs=1000, batch=256,
-                                            ofilename='', modelfile='', plumedfile=myplumedname)
+                                            ofilename='', modelfile='', plumedfile=myplumedname, plumedfile2=myplumedname2)
   
-  command = "plumed driver --mf_pdb "+myintopname+" --plumed "+myplumedname
+  command = "plumed driver --mf_pdb "+myintopname+" --plumed "+myplumedname2
   os.system(command)
   ifile = open("COLVAR", "r").readlines()
   sline = str.split(ifile[1])
