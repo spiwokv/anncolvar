@@ -20,7 +20,7 @@ def test_it():
                                             atestset=0.1, shuffle=1, nofit=0, layers=3, layer1=16, layer2=8, layer3=4,
                                             actfun1='sigmoid', actfun2='sigmoid', actfun3='sigmoid',
                                             optim='adam', loss='mean_squared_error', epochs=1000, batch=256,
-                                            ofilename='', modelfile='', plumedfile='')
+                                            ofilename='', modelfile='', plumedfile='', plumedfile2='')
   assert(cor > 0.99)
 
 if __name__ == '__main__':
