@@ -88,6 +88,9 @@ help='Prefix for output model files (experimental, default = no output)')
 parser.add_argument('-plumed', dest='plumedfile', default='plumed.dat',
 help='Output file for Plumed (default = plumed.dat)')
 
+parser.add_argument('-plumed2', dest='plumedfile2', default='plumed2.dat',
+help='Output file for Plumed with ANN module (default = plumed2.dat)')
+
 args = parser.parse_args()
 
 infilename = args.infile
@@ -164,6 +167,7 @@ else:
   ofilename = ''
 modelfile = args.modelfile
 plumedfile = args.plumedfile
+plumedfile2 = args.plumedfile2
 if plumedfile[-4:] != '.dat':
   plumedfile = plumedfile + '.dat'
 anncolvar.anncollectivevariable(infilename, intopname, colvarname, column,
@@ -171,6 +175,6 @@ anncolvar.anncollectivevariable(infilename, intopname, colvarname, column,
                                 layers, layer1, layer2, layer3,
                                 actfun1, actfun2, actfun3,
                                 optim, loss, epochs, batch,
-                                ofilename, modelfile, plumedfile)
+                                ofilename, modelfile, plumedfile, plumedfile2)
 
 
