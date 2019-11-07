@@ -468,7 +468,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       ofile.write("NUM_LAYERS=2\n")
-      ofile.write("NUM_NODES=%i,%i\n" % (layer1,layer2))
+      ofile.write("NUM_NODES=%i,%i\n" % (layer1,1))
       if actfun1 == 'tanh': 
         ofile.write("ACTIVATIONS=Tanh\n")
       else:
@@ -481,9 +481,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       toprint = "WEIGHTS1=\n"
-      for i in range(layer2):
-        for j in range(layer1):
-          toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j,i])
+      #for i in range(layer2):
+      for j in range(layer1):
+        toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       toprint = "BIASES0="
@@ -491,10 +491,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[1][i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "BIASES1="
-      for i in range(layer2):
-        toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[1][i])
-      toprint = toprint[:-1] + "\n"
+      toprint = "BIASES1=%0.6f\n" % (codecvs.layers[2].get_weights()[1][0])
       ofile.write(toprint)
       ofile.write("... ANN\n")
       #toprint = "l2: COMBINE ARG="
@@ -520,7 +517,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       ofile.write("NUM_LAYERS=3\n")
-      ofile.write("NUM_NODES=%i,%i,%i\n" % (layer1,layer2,layer3))
+      ofile.write("NUM_NODES=%i,%i,%i\n" % (layer1,layer2,1))
       if actfun1 == 'tanh' and actfun2 == 'tanh':
         ofile.write("ACTIVATIONS=Tanh,Tanh\n")
       else:
@@ -539,9 +536,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       toprint = "WEIGHTS2=\n"
-      for i in range(layer3):
-        for j in range(layer2):
-          toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j,i])
+      #for i in range(layer3):
+      for j in range(layer2):
+        toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       toprint = "BIASES0="
@@ -554,10 +551,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[1][i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "BIASES2="
-      for i in range(layer3):
-        toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[1][i])
-      toprint = toprint[:-1] + "\n"
+      toprint = "BIASES2=%0.6f\n" % (codecvs.layers[3].get_weights()[1][0])
       ofile.write(toprint)
       ofile.write("... ANN\n")
       #toprint = "l3: COMBINE ARG="
@@ -583,7 +577,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       ofile.write("NUM_LAYERS=4\n")
-      ofile.write("NUM_NODES=%i,%i,%i,%i\n" % (layer1,layer2,layer3,layer4))
+      ofile.write("NUM_NODES=%i,%i,%i,%i\n" % (layer1,layer2,layer3,1))
       if actfun1 == 'tanh' and actfun2 == 'tanh' and actfun3 == 'tanh':
         ofile.write("ACTIVATIONS=Tanh,Tanh,Tanh\n")
       else:
@@ -608,9 +602,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       toprint = "WEIGHTS3=\n"
-      for i in range(layer4):
-        for j in range(layer3):
-          toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[0][j,i])
+      #for i in range(layer4):
+      for j in range(layer3):
+        toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[0][j])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       toprint = "BIASES0="
@@ -628,10 +622,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[1][i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "BIASES4="
-      for i in range(layer4):
-        toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[1][i])
-      toprint = toprint[:-1] + "\n"
+      toprint = "BIASES4=%0.6f\n" % (codecvs.layers[4].get_weights()[1][0])
       ofile.write(toprint)
       ofile.write("... ANN\n")
       #toprint = "l4: COMBINE ARG="
