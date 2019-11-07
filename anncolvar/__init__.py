@@ -467,10 +467,10 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      ofile.write("NUM_LAYERS=2\n")
-      ofile.write("NUM_NODES=%i,%i\n" % (layer1,1))
+      ofile.write("NUM_LAYERS=3\n")
+      ofile.write("NUM_NODES=%i,%i\n" % (3*trajsize[1],layer1,1))
       if actfun1 == 'tanh': 
-        ofile.write("ACTIVATIONS=Tanh\n")
+        ofile.write("ACTIVATIONS=Tanh,Linear\n")
       else:
         print("ERROR: Only tanh activation function supported in ANN module")
         exit(0)
@@ -481,9 +481,15 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       toprint = "WEIGHTS1=\n"
-      #for i in range(layer2):
-      for j in range(layer1):
-        toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
+      for i in range(layer2):
+        for j in range(layer1):
+          toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "WEIGHTS2=\n"
+      for i in range(layer2):
+      #for j in range(layer1):
+        toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       toprint = "BIASES0="
@@ -491,7 +497,12 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[1][i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "BIASES1=%0.6f\n" % (codecvs.layers[2].get_weights()[1][0])
+      toprint = "BIASES1="
+      for i in range(layer2):
+        toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES2=%0.6f\n" % (codecvs.layers[3].get_weights()[1][0])
       ofile.write(toprint)
       ofile.write("... ANN\n")
       #toprint = "l2: COMBINE ARG="
