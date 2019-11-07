@@ -474,13 +474,13 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       else:
         print("ERROR: Only tanh activation function supported in ANN module")
         exit(0)
-      toprint = "WEIGHTS0=\n"
+      toprint = "WEIGHTS0="
       for i in range(layer1):
         for j in range(3*trajsize[1]):
           toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "WEIGHTS1=\n"
+      toprint = "WEIGHTS1="
       #for i in range(layer2):
       for j in range(layer1):
         toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
@@ -523,19 +523,19 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       else:
         print("ERROR: Only tanh activation function supported in ANN module")
         exit(0)
-      toprint = "WEIGHTS0=\n"
+      toprint = "WEIGHTS0="
       for i in range(layer1):
         for j in range(3*trajsize[1]):
           toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "WEIGHTS1=\n"
+      toprint = "WEIGHTS1="
       for i in range(layer2):
         for j in range(layer1):
           toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j,i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "WEIGHTS2=\n"
+      toprint = "WEIGHTS2="
       #for i in range(layer3):
       for j in range(layer2):
         toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j])
@@ -583,25 +583,25 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       else:
         print("ERROR: Only tanh activation function supported in ANN module")
         exit(0)
-      toprint = "WEIGHTS0=\n"
+      toprint = "WEIGHTS0="
       for i in range(layer1):
         for j in range(3*trajsize[1]):
           toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "WEIGHTS1=\n"
+      toprint = "WEIGHTS1="
       for i in range(layer2):
         for j in range(layer1):
           toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j,i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "WEIGHTS2=\n"
+      toprint = "WEIGHTS2="
       for i in range(layer3):
         for j in range(layer2):
           toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j,i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "WEIGHTS3=\n"
+      toprint = "WEIGHTS3="
       #for i in range(layer4):
       for j in range(layer3):
         toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[0][j])
