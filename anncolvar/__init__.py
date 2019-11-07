@@ -617,12 +617,12 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[1][i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "BIASES3="
+      toprint = "BIASES2="
       for i in range(layer3):
         toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[1][i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "BIASES4=%0.6f\n" % (codecvs.layers[4].get_weights()[1][0])
+      toprint = "BIASES3=%0.6f\n" % (codecvs.layers[4].get_weights()[1][0])
       ofile.write(toprint)
       ofile.write("... ANN\n")
       #toprint = "l4: COMBINE ARG="
