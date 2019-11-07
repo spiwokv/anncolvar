@@ -511,7 +511,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       ofile.write("NUM_LAYERS=2\n")
       ofile.write("NUM_NODES=%i,%i\n" % (layer1,layer2))
       if actfun1 == 'tanh' and actfun2 == 'tanh':
-        ofile.write("ACTIVATIONS=Tanh,Tanh\n")
+        ofile.write("ACTIVATIONS=Tanh\n")
       else:
         print("ERROR: Only tanh activation function supported in ANN module")
         exit(0)
@@ -563,7 +563,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       ofile.write("NUM_LAYERS=3\n")
       ofile.write("NUM_NODES=%i,%i,%i\n" % (layer1,layer2,layer3))
       if actfun1 == 'tanh' and actfun2 == 'tanh' and actfun3 == 'tanh':
-        ofile.write("ACTIVATIONS=Tanh,Tanh,Tanh\n")
+        ofile.write("ACTIVATIONS=Tanh,Tanh\n")
       else:
         print("ERROR: Only tanh activation function supported in ANN module")
         exit(0)
