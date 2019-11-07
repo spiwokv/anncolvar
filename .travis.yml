@@ -63,13 +63,12 @@ install:
   - ccache -s
   - git clone https://github.com/plumed/plumed2.git
   - cd plumed2
-  - ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) CXXFLAGS="$PLUMED_CXXFLAGS" LDFLAGS="$PLUMED_LDFLAGS" CPPFLAGS="$PLUMED_CPPFLAGS" $CONFIG_FLAGS --prefix="$HOME/opt --enable-modules=annfunc"
+  - ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) CXXFLAGS="$PLUMED_CXXFLAGS" LDFLAGS="$PLUMED_LDFLAGS" CPPFLAGS="$PLUMED_CPPFLAGS" $CONFIG_FLAGS --prefix="$HOME/opt" --enable-modules=annfunc
   - make -j 4
   - make install
   - cd ..
   - export PATH=$PATH:/home/travis/opt/bin/
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/travis/opt/lib/
-  - export PLUMED_KERNEL=/home/travis/opt
 
 script:
   - export MKL_THREADING_LAYER="GNU"
