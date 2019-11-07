@@ -468,7 +468,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       ofile.write("NUM_LAYERS=3\n")
-      ofile.write("NUM_NODES=%i,%i\n" % (3*trajsize[1],layer1,1))
+      ofile.write("NUM_NODES=%i,%i,1\n" % (3*trajsize[1],layer1))
       if actfun1 == 'tanh': 
         ofile.write("ACTIVATIONS=Tanh,Linear\n")
       else:
