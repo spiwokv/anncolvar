@@ -467,50 +467,9 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      ofile.write("NUM_LAYERS=1\n")
-      ofile.write("NUM_NODES=%i\n" % layer1)
-      if actfun1 == 'tanh': 
-        ofile.write("ACTIVATIONS=Tanh\n")
-      else:
-        print("ERROR: Only tanh activation function supported in ANN module")
-        exit(0)
-      toprint = "WEIGHTS0=\n"
-      for i in range(layer1):
-        for j in range(3*trajsize[1]):
-          toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
-      toprint = toprint[:-1] + "\n"
-      ofile.write(toprint)
-      toprint = "BIASES0="
-      for i in range(layer1):
-        toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[1][i])
-      toprint = toprint[:-1] + "\n"
-      ofile.write(toprint)
-      ofile.write("... ANN\n")
-      toprint = "l2: COMBINE ARG="
-      for j in range(layer1):
-        toprint = toprint + "ann.node-%i," % (j)
-      toprint = toprint[:-1] + " COEFFICIENTS="
-      for j in range(layer1):
-        toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
-      toprint = toprint[:-1] + " PERIODIC=NO\n"
-      ofile.write(toprint)
-      if codecvs.layers[2].get_weights()[1][0]>0.0:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][0]))
-      else:
-        ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0]))
-      toprint = "PRINT ARG=l2r STRIDE=100 FILE=COLVAR\n"
-      ofile.write(toprint)
-    if layers==2:
-      ofile.write("ANN ...\n")
-      ofile.write("LABEL=ann\n")
-      toprint = "ARG="
-      for j in range(trajsize[1]):
-        toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
-      toprint = toprint[:-1] + "\n"
-      ofile.write(toprint)
       ofile.write("NUM_LAYERS=2\n")
       ofile.write("NUM_NODES=%i,%i\n" % (layer1,layer2))
-      if actfun1 == 'tanh' and actfun2 == 'tanh':
+      if actfun1 == 'tanh': 
         ofile.write("ACTIVATIONS=Tanh\n")
       else:
         print("ERROR: Only tanh activation function supported in ANN module")
@@ -538,21 +497,21 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       ofile.write("... ANN\n")
-      toprint = "l3: COMBINE ARG="
-      for j in range(layer2):
-        toprint = toprint + "ann.node-%i," % (j)
-      toprint = toprint[:-1] + " COEFFICIENTS="
-      for j in range(layer2):
-        toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j])
-      toprint = toprint[:-1] + " PERIODIC=NO\n"
+      #toprint = "l2: COMBINE ARG="
+      #for j in range(layer1):
+      #  toprint = toprint + "ann.node-%i," % (j)
+      #toprint = toprint[:-1] + " COEFFICIENTS="
+      #for j in range(layer1):
+      #  toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
+      #toprint = toprint[:-1] + " PERIODIC=NO\n"
+      #ofile.write(toprint)
+      #if codecvs.layers[2].get_weights()[1][0]>0.0:
+      #  ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][0]))
+      #else:
+      #  ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0]))
+      toprint = "PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
-      if codecvs.layers[3].get_weights()[1][0]>0.0:
-        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0]))
-      else:
-        ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0]))
-      toprint = "PRINT ARG=l3r STRIDE=100 FILE=COLVAR\n"
-      ofile.write(toprint)                  
-    if layers==3:
+    if layers==2:
       ofile.write("ANN ...\n")
       ofile.write("LABEL=ann\n")
       toprint = "ARG="
@@ -562,7 +521,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       ofile.write(toprint)
       ofile.write("NUM_LAYERS=3\n")
       ofile.write("NUM_NODES=%i,%i,%i\n" % (layer1,layer2,layer3))
-      if actfun1 == 'tanh' and actfun2 == 'tanh' and actfun3 == 'tanh':
+      if actfun1 == 'tanh' and actfun2 == 'tanh':
         ofile.write("ACTIVATIONS=Tanh,Tanh\n")
       else:
         print("ERROR: Only tanh activation function supported in ANN module")
@@ -595,25 +554,99 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[1][i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      toprint = "BIASES3="
+      toprint = "BIASES2="
       for i in range(layer3):
         toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[1][i])
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       ofile.write("... ANN\n")
-      toprint = "l4: COMBINE ARG="
-      for j in range(layer3):
-        toprint = toprint + "ann.node-%i," % (j)
-      toprint = toprint[:-1] + " COEFFICIENTS="
-      for j in range(layer3):
-        toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[0][j])
-      toprint = toprint[:-1] + " PERIODIC=NO\n"
+      #toprint = "l3: COMBINE ARG="
+      #for j in range(layer2):
+      #  toprint = toprint + "ann.node-%i," % (j)
+      #toprint = toprint[:-1] + " COEFFICIENTS="
+      #for j in range(layer2):
+      #  toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j])
+      #toprint = toprint[:-1] + " PERIODIC=NO\n"
+      #ofile.write(toprint)
+      #if codecvs.layers[3].get_weights()[1][0]>0.0:
+      #  ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0]))
+      #else:
+      #  ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0]))
+      toprint = "PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n"
+      ofile.write(toprint)                  
+    if layers==3:
+      ofile.write("ANN ...\n")
+      ofile.write("LABEL=ann\n")
+      toprint = "ARG="
+      for j in range(trajsize[1]):
+        toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
+      toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      if codecvs.layers[4].get_weights()[1][0]>0.0:
-        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0]))
+      ofile.write("NUM_LAYERS=4\n")
+      ofile.write("NUM_NODES=%i,%i,%i,%i\n" % (layer1,layer2,layer3,layer4))
+      if actfun1 == 'tanh' and actfun2 == 'tanh' and actfun3 == 'tanh':
+        ofile.write("ACTIVATIONS=Tanh,Tanh,Tanh\n")
       else:
-        ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0]))
-      toprint = "PRINT ARG=l3r STRIDE=100 FILE=COLVAR\n"
+        print("ERROR: Only tanh activation function supported in ANN module")
+        exit(0)
+      toprint = "WEIGHTS0=\n"
+      for i in range(layer1):
+        for j in range(3*trajsize[1]):
+          toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "WEIGHTS1=\n"
+      for i in range(layer2):
+        for j in range(layer1):
+          toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "WEIGHTS2=\n"
+      for i in range(layer3):
+        for j in range(layer2):
+          toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "WEIGHTS3=\n"
+      for i in range(layer4):
+        for j in range(layer3):
+          toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES0="
+      for i in range(layer1):
+        toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES1="
+      for i in range(layer2):
+        toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES3="
+      for i in range(layer3):
+        toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES4="
+      for i in range(layer4):
+        toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      ofile.write("... ANN\n")
+      #toprint = "l4: COMBINE ARG="
+      #for j in range(layer3):
+      #  toprint = toprint + "ann.node-%i," % (j)
+      #toprint = toprint[:-1] + " COEFFICIENTS="
+      #for j in range(layer3):
+      #  toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[0][j])
+      #toprint = toprint[:-1] + " PERIODIC=NO\n"
+      #ofile.write(toprint)
+      #if codecvs.layers[4].get_weights()[1][0]>0.0:
+      #  ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0]))
+      #else:
+      #  ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0]))
+      toprint = "PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)                  
     ofile.close()
   return codecvs, np.corrcoef(cvs,coded_cvs[:,0])[0,1]
