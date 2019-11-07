@@ -560,7 +560,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
-      ofile.write("NUM_LAYERS=2\n")
+      ofile.write("NUM_LAYERS=3\n")
       ofile.write("NUM_NODES=%i,%i,%i\n" % (layer1,layer2,layer3))
       if actfun1 == 'tanh' and actfun2 == 'tanh' and actfun3 == 'tanh':
         ofile.write("ACTIVATIONS=Tanh,Tanh,Tanh\n")
