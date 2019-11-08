@@ -19,15 +19,12 @@ def test_it():
                                             intopname=myintopname,
                                             colvarname=mycolvarname,
                                             column=2, boxx=1.0, boxy=1.0, boxz=1.0,
-                                            atestset=0.1, shuffle=1, nofit=0, layers=1, layer1=16, layer2=8, layer3=4,
-                                            actfun1='tanh', actfun2='linear', actfun3='linear',
+                                            atestset=0.1, shuffle=1, nofit=0, layers=2, layer1=16, layer2=8, layer3=4,
+                                            actfun1='tanh', actfun2='tanh', actfun3='linear',
                                             optim='adam', loss='mean_squared_error', epochs=1000, batch=256,
                                             ofilename='', modelfile='', plumedfile=myplumedname, plumedfile2=myplumedname2)
   
-  ifile = open(myplumedname2, "r").readlines()
-  for line in ifile:
-    print(line)
-  command = "plumed driver --mf_pdb "+myintopname+" --plumed "+myplumedname
+  command = "plumed driver --mf_pdb "+myintopname+" --plumed "+myplumedname2
   os.system(command)
   ifile = open("COLVAR", "r").readlines()
   sline = str.split(ifile[1])
@@ -36,3 +33,4 @@ def test_it():
 
 if __name__ == '__main__':
   pytest.main([__file__])
+

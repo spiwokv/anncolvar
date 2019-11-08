@@ -17,7 +17,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
                           shuffle=1, nofit=0, layers=1, layer1=256, layer2=256, layer3=256,
                           actfun1='sigmoid', actfun2='sigmoid', actfun3='sigmoid',
                           optim='adam', loss='mean_squared_error', epochs=100, batch=0,
-                          ofilename='', modelfile='', plumedfile=''):
+                          ofilename='', modelfile='', plumedfile='', plumedfile2=''):
   try:
     print("Loading trajectory")
     refpdb = md.load_pdb(intopname)
@@ -189,7 +189,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       np.save(file=modelfile+"_4.npy", arr=codecvs.layers[4].get_weights())
   
   if plumedfile != '':
-    print("Writing Plumed input into %s" % plumedfile)
+    print("Writing Plumed <=2.5.3 input into %s" % plumedfile)
     print("")
     traj = md.load(infilename, top=intopname)
     table, bonds = traj.topology.to_dataframe()
@@ -442,6 +442,166 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
         ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0]))
       toprint = "PRINT ARG=l4r STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
+    ofile.close()
+    
+  if plumedfile2 != '':
+    print("Writing Plumed >= 2.6 input into %s" % plumedfile2)
+    print("")
+    traj = md.load(infilename, top=intopname)
+    table, bonds = traj.topology.to_dataframe()
+    atoms = table['serial'][:]
+    ofile = open(plumedfile2, "w")
+    ofile.write("WHOLEMOLECULES ENTITY0=1-%i\n" % np.max(atoms))
+    ofile.write("FIT_TO_TEMPLATE STRIDE=1 REFERENCE=%s TYPE=OPTIMAL\n" % intopname)
+    for i in range(trajsize[1]):
+      ofile.write("p%i: POSITION ATOM=%i NOPBC\n" % (i+1,atoms[i]))
+    for i in range(trajsize[1]):
+      ofile.write("p%ix: COMBINE ARG=p%i.x COEFFICIENTS=%f PERIODIC=NO\n" % (i+1,i+1,1.0/maxbox))
+      ofile.write("p%iy: COMBINE ARG=p%i.y COEFFICIENTS=%f PERIODIC=NO\n" % (i+1,i+1,1.0/maxbox))
+      ofile.write("p%iz: COMBINE ARG=p%i.z COEFFICIENTS=%f PERIODIC=NO\n" % (i+1,i+1,1.0/maxbox))
+    if layers==1:
+      ofile.write("ANN ...\n")
+      ofile.write("LABEL=ann\n")
+      toprint = "ARG="
+      for j in range(trajsize[1]):
+        toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      ofile.write("NUM_LAYERS=3\n")
+      ofile.write("NUM_NODES=%i,%i,1\n" % (3*trajsize[1],layer1))
+      if actfun1 == 'tanh': 
+        ofile.write("ACTIVATIONS=Tanh,Linear\n")
+      else:
+        print("ERROR: Only tanh activation function supported in ANN module")
+        exit(0)
+      toprint = "WEIGHTS0="
+      for i in range(layer1):
+        for j in range(3*trajsize[1]):
+          toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "WEIGHTS1="
+      for j in range(layer1):
+        toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES0="
+      for i in range(layer1):
+        toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES1=%0.6f\n" % (codecvs.layers[2].get_weights()[1][0])
+      ofile.write(toprint)
+      ofile.write("... ANN\n")
+      toprint = "PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n"
+      ofile.write(toprint)
+    if layers==2:
+      ofile.write("ANN ...\n")
+      ofile.write("LABEL=ann\n")
+      toprint = "ARG="
+      for j in range(trajsize[1]):
+        toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      ofile.write("NUM_LAYERS=4\n")
+      ofile.write("NUM_NODES=%i,%i,%i,1\n" % (3*trajsize[1],layer1,layer2))
+      if actfun1 == 'tanh' and actfun2 == 'tanh':
+        ofile.write("ACTIVATIONS=Tanh,Tanh,Linear\n")
+      else:
+        print("ERROR: Only tanh activation function supported in ANN module")
+        exit(0)
+      toprint = "WEIGHTS0="
+      for i in range(layer1):
+        for j in range(3*trajsize[1]):
+          toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "WEIGHTS1="
+      for i in range(layer2):
+        for j in range(layer1):
+          toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "WEIGHTS2="
+      #for i in range(layer3):
+      for j in range(layer2):
+        toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES0="
+      for i in range(layer1):
+        toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES1="
+      for i in range(layer2):
+        toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES2=%0.6f\n" % (codecvs.layers[3].get_weights()[1][0])
+      ofile.write(toprint)
+      ofile.write("... ANN\n")
+      toprint = "PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n"
+      ofile.write(toprint)                  
+    if layers==3:
+      ofile.write("ANN ...\n")
+      ofile.write("LABEL=ann\n")
+      toprint = "ARG="
+      for j in range(trajsize[1]):
+        toprint = toprint + "p%ix,p%iy,p%iz," % (j+1,j+1,j+1)
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      ofile.write("NUM_LAYERS=5\n")
+      ofile.write("NUM_NODES=%i,%i,%i,%i,1\n" % (3*trajsize[1],layer1,layer2,layer3))
+      if actfun1 == 'tanh' and actfun2 == 'tanh' and actfun3 == 'tanh':
+        ofile.write("ACTIVATIONS=Tanh,Tanh,Tanh,Linear\n")
+      else:
+        print("ERROR: Only tanh activation function supported in ANN module")
+        exit(0)
+      toprint = "WEIGHTS0="
+      for i in range(layer1):
+        for j in range(3*trajsize[1]):
+          toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "WEIGHTS1="
+      for i in range(layer2):
+        for j in range(layer1):
+          toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "WEIGHTS2="
+      for i in range(layer3):
+        for j in range(layer2):
+          toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j,i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "WEIGHTS3="
+      #for i in range(layer4):
+      for j in range(layer3):
+        toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[0][j])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES0="
+      for i in range(layer1):
+        toprint = toprint + "%0.6f," % (codecvs.layers[1].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES1="
+      for i in range(layer2):
+        toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES2="
+      for i in range(layer3):
+        toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[1][i])
+      toprint = toprint[:-1] + "\n"
+      ofile.write(toprint)
+      toprint = "BIASES3=%0.6f\n" % (codecvs.layers[4].get_weights()[1][0])
+      ofile.write(toprint)
+      ofile.write("... ANN\n")
+      toprint = "PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n"
+      ofile.write(toprint)                  
     ofile.close()
   return codecvs, np.corrcoef(cvs,coded_cvs[:,0])[0,1]
 
