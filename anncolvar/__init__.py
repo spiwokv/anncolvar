@@ -481,7 +481,6 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = toprint[:-1] + "\n"
       ofile.write(toprint)
       toprint = "WEIGHTS1="
-      #for i in range(layer2):
       for j in range(layer1):
         toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
       toprint = toprint[:-1] + "\n"
@@ -494,18 +493,6 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = "BIASES1=%0.6f\n" % (codecvs.layers[2].get_weights()[1][0])
       ofile.write(toprint)
       ofile.write("... ANN\n")
-      #toprint = "l2: COMBINE ARG="
-      #for j in range(layer1):
-      #  toprint = toprint + "ann.node-%i," % (j)
-      #toprint = toprint[:-1] + " COEFFICIENTS="
-      #for j in range(layer1):
-      #  toprint = toprint + "%0.6f," % (codecvs.layers[2].get_weights()[0][j])
-      #toprint = toprint[:-1] + " PERIODIC=NO\n"
-      #ofile.write(toprint)
-      #if codecvs.layers[2].get_weights()[1][0]>0.0:
-      #  ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[2].get_weights()[1][0]))
-      #else:
-      #  ofile.write("l2r: MATHEVAL ARG=l2 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[2].get_weights()[1][0]))
       toprint = "PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)
     if layers==2:
@@ -554,18 +541,6 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = "BIASES2=%0.6f\n" % (codecvs.layers[3].get_weights()[1][0])
       ofile.write(toprint)
       ofile.write("... ANN\n")
-      #toprint = "l3: COMBINE ARG="
-      #for j in range(layer2):
-      #  toprint = toprint + "ann.node-%i," % (j)
-      #toprint = toprint[:-1] + " COEFFICIENTS="
-      #for j in range(layer2):
-      #  toprint = toprint + "%0.6f," % (codecvs.layers[3].get_weights()[0][j])
-      #toprint = toprint[:-1] + " PERIODIC=NO\n"
-      #ofile.write(toprint)
-      #if codecvs.layers[3].get_weights()[1][0]>0.0:
-      #  ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[3].get_weights()[1][0]))
-      #else:
-      #  ofile.write("l3r: MATHEVAL ARG=l3 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[3].get_weights()[1][0]))
       toprint = "PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)                  
     if layers==3:
@@ -625,18 +600,6 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = "BIASES3=%0.6f\n" % (codecvs.layers[4].get_weights()[1][0])
       ofile.write(toprint)
       ofile.write("... ANN\n")
-      #toprint = "l4: COMBINE ARG="
-      #for j in range(layer3):
-      #  toprint = toprint + "ann.node-%i," % (j)
-      #toprint = toprint[:-1] + " COEFFICIENTS="
-      #for j in range(layer3):
-      #  toprint = toprint + "%0.6f," % (codecvs.layers[4].get_weights()[0][j])
-      #toprint = toprint[:-1] + " PERIODIC=NO\n"
-      #ofile.write(toprint)
-      #if codecvs.layers[4].get_weights()[1][0]>0.0:
-      #  ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x+%0.6f) PERIODIC=NO\n" % (codecvs.layers[4].get_weights()[1][0]))
-      #else:
-      #  ofile.write("l4r: MATHEVAL ARG=l4 FUNC=(x-%0.6f) PERIODIC=NO\n" % (-codecvs.layers[4].get_weights()[1][0]))
       toprint = "PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)                  
     ofile.close()
