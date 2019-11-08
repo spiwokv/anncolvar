@@ -24,9 +24,6 @@ def test_it():
                                             optim='adam', loss='mean_squared_error', epochs=1000, batch=256,
                                             ofilename='', modelfile='', plumedfile=myplumedname, plumedfile2=myplumedname2)
   
-  ifile = open(myplumedname2, "r").readlines()
-  for line in ifile:
-    print(line)
   command = "plumed driver --mf_pdb "+myintopname+" --plumed "+myplumedname2
   os.system(command)
   ifile = open("COLVAR", "r").readlines()
