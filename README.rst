@@ -8,11 +8,13 @@ D. Trapl, I. Horvaćanin, V. Mareška, F. Özçelik, G. Unal and V. Spiwok: `ann
 anncolvar
 *********
 
-# News
+News
+====
 
 Current master vsersion makes it possible to use ANN module of recent master version of Plumed.
 
-# Usage
+Syntax
+======
 
 Collective variables by artificial neural networks::
 
