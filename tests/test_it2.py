@@ -25,7 +25,9 @@ def test_it():
                                             ofilename='', modelfile='', plumedfile=myplumedname, plumedfile2=myplumedname2)
   
   command = "plumed driver --mf_pdb "+myintopname+" --plumed "+myplumedname
+  now = dt.datetime.now()
   os.system(command)
+  print("time %i s\n" % (dt.datetime.now()-now).seconds)
   ifile = open("COLVAR", "r").readlines()
   sline = str.split(ifile[1])
   x = float(sline[1])
