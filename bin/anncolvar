@@ -170,6 +170,21 @@ plumedfile = args.plumedfile
 plumedfile2 = args.plumedfile2
 if plumedfile[-4:] != '.dat':
   plumedfile = plumedfile + '.dat'
+if plumedfile2[-4:] != '.dat':
+  plumedfile2 = plumedfile2 + '.dat'
+if plumedfile2 !="":
+  if layers == 1:
+    if layers1 !="tanh":
+      print("ERROR: only tanh and linear functions are currently supported in ANN module of Plumed")
+      exit(0)
+  elif layers == 2:
+    if layers1 !="tanh" or layers2 !="tanh":
+      print("ERROR: only tanh and linear functions are currently supported in ANN module of Plumed")
+      exit(0)
+  elif layers == 3:
+    if layers1 !="tanh" or layers2 !="tanh" or layers3 !="tanh":
+      print("ERROR: only tanh and linear functions are currently supported in ANN module of Plumed")
+      exit(0)
 anncolvar.anncollectivevariable(infilename, intopname, colvarname, column,
                                 boxx, boxy, boxz, atestset, shuffle, nofit,
                                 layers, layer1, layer2, layer3,
