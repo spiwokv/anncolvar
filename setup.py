@@ -5,7 +5,7 @@ def readme():
     return f.read()
 
 setup(name='anncolvar',
-      version='0.7',
+      version='0.8',
       description='Coding collective variables by artificial neural networks',
       long_description=readme(),
       classifiers=[
