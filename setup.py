@@ -1,13 +1,15 @@
 from setuptools import setup
 
-def readme():
-  with open('README.rst') as f:
-    return f.read()
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.rst'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(name='anncolvar',
       version='0.8',
       description='Coding collective variables by artificial neural networks',
-      long_description=readme(),
+      long_description=long_description,
+      long_description_content_type='text/x-rst',
       classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: MIT License',
