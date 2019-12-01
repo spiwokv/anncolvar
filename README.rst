@@ -2,7 +2,7 @@
 |DOI| |nest|
 
 Read more in 
-D. Trapl, I. Horvaćanin, V. Mareška, F. Özçelik, G. Unal and V. Spiwok: `anncolvar: Approximation of Complex Collective Variables by Artificial Neural Networks for Analysis and Biasing of Molecular Simulations <https://www.frontiersin.org/articles/10.3389/fmolb.2019.00025/>`_ *Front. Mol. Biosci.*  2019, **6**, 25 (doi: 10.3389/fmolb.2019.00025)
+D. Trapl, I. Horvaćanin, V. Mareška, F. Özçelik, G. Unal and V. Spiwok: anncolvar: Approximation of Complex Collective Variables by Artificial Neural Networks for Analysis and Biasing of Molecular Simulations <https://www.frontiersin.org/articles/10.3389/fmolb.2019.00025/> *Front. Mol. Biosci.*  2019, **6**, 25 (doi: 10.3389/fmolb.2019.00025)
 
 *********
 anncolvar
@@ -145,7 +145,9 @@ enough to fit the molecule in all frames of the trajectory. It should not be too
 large because this suppresses non-linearity in the neural network. When the user
 decides to use a 3x3x3 nm box it is necessary to place the molecule to be centered
 at coordinates (1.5,1.5,1.5) nm. In Gromacs it is possible to use::
+
   gmx editconf -f mol.pdb -o reference.pdb -c -box 3 3 3
+
 It must also contain only atoms to be analyzed. Size of the box can be specified
 by parameters *-boxx*, *-boxy* and *-boxz* (in nm).
 
