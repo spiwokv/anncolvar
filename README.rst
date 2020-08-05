@@ -11,7 +11,7 @@ anncolvar
 News
 ====
 
-August 2020: Support for Python 2.7 terminated, used Python 3.
+August 2020: Support for Python 2.7 terminated, use Python 3.
 
 Current master vsersion makes it possible to use ANN module of recent master version of Plumed.
 
