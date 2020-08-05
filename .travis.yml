@@ -41,8 +41,8 @@ install:
     fi
   - pip install argparse
   - pip install -e .[tests]
-  #- pip install tensorflow==1.7
-  - pip install tensorflow
+  #- pip install tensorflow
+  - pip install tensorflow-cpu
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
       pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-cp27-cp27mu-linux_x86_64.whl;
     elif [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then
