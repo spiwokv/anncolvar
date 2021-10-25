@@ -75,7 +75,7 @@ jobs:
       with:
         path: ~/.ccache
 
-      - name: Install Plumed 2
+    - name: Install Plumed 2
       run: |
         sudo apt-get install -y ccache
         git clone https://github.com/plumed/plumed2.git
