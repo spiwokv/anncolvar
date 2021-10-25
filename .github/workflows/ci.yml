@@ -83,8 +83,6 @@ jobs:
         os: [ ubuntu-latest, ubuntu-18.04 ]
     steps:
       - uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
       run: |
         export MKL_THREADING_LAYER="GNU"
         python -c "import keras.backend"
