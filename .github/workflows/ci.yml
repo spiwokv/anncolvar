@@ -82,7 +82,7 @@ jobs:
       matrix:
         os: [ ubuntu-latest, ubuntu-18.04 ]
     steps:
-      - uses: codecov/codecov-action@v2
+    - uses: codecov/codecov-action@v2
       run: |
         export MKL_THREADING_LAYER="GNU"
         python -c "import keras.backend"
