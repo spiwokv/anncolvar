@@ -1,0 +1,94 @@
+name: Anncolvar CI
+
+on: [push, pull_request]
+
+env:
+  CORE_CHANGED: false
+  APP_CHANGED: false
+  MKL_THREADING_LAYER: GNU
+
+jobs:
+  install-anncolvar:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-18.04]
+        python-version: [2.7, 3.6]
+        keras-backend:
+          - KERAS_BACKEND=tensorflow PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+          - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug"
+          - KERAS_BACKEND=cntk PYTHONWARNINGS=ignore PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          env:  ${{ matrix.keras-backend }}
+
+      - name: Install Miniconda and activate environment
+        run: |
+          wget https://repo.continuum.io/miniconda/${{ (matrix.python-version > 2.7 && 'Miniconda3') || 'Miniconda' }}-latest-Linux-x86_64.sh -O miniconda.sh;
+          bash miniconda.sh -b -p $HOME/miniconda
+          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
+          hash -r
+          conda config --set always_yes yes --set changeps1 no
+          conda update -q conda
+          conda info -a
+          conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pytest-cov pandas
+          source activate test-environment
+
+      - name: Install another dependencies
+        run: |
+          pip install --only-binary=numpy numpy nose cython h5py theano
+          conda install mkl mkl-service
+          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
+          conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
+          pip install argparse tensorflow
+          pip install -e .[tests]
+
+      - name: Keras and MPI configurations
+        run: |
+          pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-${{ (matrix.python-version > 2.7 && 'cp36-cp36m') || 'cp27-cp27mu' }}-linux_x86_64.whl
+          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
+          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
+          rm -rf ~/mpi
+          mkdir ~/mpi
+          pushd ~/mpi
+          wget http://cntk.ai/PythonWheel/ForKeras/depends/openmpi_1.10-3.zip
+          unzip ./openmpi_1.10-3.zip
+          sudo dpkg -i openmpi_1.10-3.deb
+          popd
+
+      - name: Install Plumed 2
+        with:
+          path: ~/.ccache
+        run: |
+          sudo apt-get install -y ccache
+          git clone https://github.com/plumed/plumed2.git
+          cd plumed2
+          ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) CXXFLAGS="$PLUMED_CXXFLAGS" LDFLAGS="$PLUMED_LDFLAGS" CPPFLAGS="$PLUMED_CPPFLAGS" $CONFIG_FLAGS --prefix="$HOME/opt" --enable-modules=annfunc
+          make -j 4
+          make install
+          cd ..
+
+  build-app:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-18.04]
+    steps:
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      run: |
+        export MKL_THREADING_LAYER="GNU"
+        python -c "import keras.backend"
+        sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
+        echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
+        KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH py.test --cov=anncolvar tests/;
+
