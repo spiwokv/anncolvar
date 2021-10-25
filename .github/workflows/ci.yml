@@ -64,17 +64,26 @@ jobs:
           sudo dpkg -i openmpi_1.10-3.deb
           popd
 
+  plumed-install:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, ubuntu-18.04 ]
+
+    steps:
+    - uses: actions/cache@v2
+      with:
+        path: ~/.ccache
+
       - name: Install Plumed 2
-        with:
-          path: ~/.ccache
-        run: |
-          sudo apt-get install -y ccache
-          git clone https://github.com/plumed/plumed2.git
-          cd plumed2
-          ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) CXXFLAGS="$PLUMED_CXXFLAGS" LDFLAGS="$PLUMED_LDFLAGS" CPPFLAGS="$PLUMED_CPPFLAGS" $CONFIG_FLAGS --prefix="$HOME/opt" --enable-modules=annfunc
-          make -j 4
-          make install
-          cd ..
+      run: |
+        sudo apt-get install -y ccache
+        git clone https://github.com/plumed/plumed2.git
+        cd plumed2
+        ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) CXXFLAGS="$PLUMED_CXXFLAGS" LDFLAGS="$PLUMED_LDFLAGS" CPPFLAGS="$PLUMED_CPPFLAGS" $CONFIG_FLAGS --prefix="$HOME/opt" --enable-modules=annfunc
+        make -j 4
+        make install
+        cd ..
 
   build-app:
     runs-on: ${{ matrix.os }}
