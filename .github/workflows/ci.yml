@@ -22,12 +22,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: conda-incubator/setup-miniconda@v2
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - name: Set up Python ${{ matrix.python-version }} and Conda
         with:
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
+          activate-environment: test-environment
 
       - name: Install Miniconda and activate environment
         run: |
@@ -38,8 +40,6 @@ jobs:
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda info -a
-          conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pytest-cov pandas
-          source activate test-environment
 
       - name: Install another dependencies
         run: |
