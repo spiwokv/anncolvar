@@ -24,7 +24,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: conda-incubator/setup-miniconda@v2
-      - name: Set up Python ${{ matrix.python-version }} and Conda
         with:
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
