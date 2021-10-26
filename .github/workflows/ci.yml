@@ -27,6 +27,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
           activate-environment: test-environment
+      - name: Install Miniconda and activate environment
+        run: |
+          conda info -a
 
       - name: Upgrade pip before installation
         run: |
@@ -35,9 +38,6 @@ jobs:
       - name: Install another dependencies
         run: |
           pip install --only-binary=numpy numpy nose cython h5py theano
-          conda install mkl mkl-service
-          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
-          conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install --ignore-installed argparse tensorflow
           pip install -e .[tests]
 
