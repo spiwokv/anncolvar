@@ -25,12 +25,12 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
-          miniconda-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
           auto-activate-base: true
       - name: Install Miniconda and activate environment
         run: |
           conda info -a
+          python --version
 
       - name: Install another dependencies
         run: |
