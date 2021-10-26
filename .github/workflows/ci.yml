@@ -9,7 +9,7 @@ env:
 
 jobs:
   install-anncolvar:
-    name: Install anncolvar on ${{ matrix.os }} python and ${{ matrix.python-version }}
+    name: Anncolvar on ${{ matrix.os }} and python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -25,6 +25,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
+          miniconda-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
           auto-activate-base: true
       - name: Install Miniconda and activate environment
