@@ -39,10 +39,9 @@ jobs:
           conda update -q conda
           conda info -a
 
-      - name: Install another dependencies
-        if: contains( matrix.python-version, '2.7' )
+      - name: Upgrade pip before installation
         run: |
-          pip install --upgrade pip==20.3
+          python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3' }}
 
       - name: Install another dependencies
         run: |
