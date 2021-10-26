@@ -9,16 +9,16 @@ env:
 
 jobs:
   install-anncolvar:
+    name: Install anncolvar on ${{ matrix.os }} python and ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: ["ubuntu-latest", "ubuntu-18.04" ]
-        python-version: ["2.7", "3.6"]
+        python-version: ["3.6", "2.7"]
         keras-backend:
           - KERAS_BACKEND=tensorflow PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug"
           - KERAS_BACKEND=cntk PYTHONWARNINGS=ignore PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
-
 
     steps:
       - uses: actions/checkout@v2
@@ -30,10 +30,6 @@ jobs:
       - name: Install Miniconda and activate environment
         run: |
           conda info -a
-
-      - name: Upgrade pip before installation
-        run: |
-          python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3' }}
 
       - name: Install another dependencies
         run: |
