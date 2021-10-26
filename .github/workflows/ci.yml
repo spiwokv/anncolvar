@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
-          activate-environment: test-environment
+          auto-activate-base: true
       - name: Install Miniconda and activate environment
         run: |
           conda info -a
