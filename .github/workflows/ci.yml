@@ -21,21 +21,14 @@ jobs:
 
 
     steps:
+      - name: Install Miniconda and activate environment
       - uses: actions/checkout@v2
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
           activate-environment: test-environment
-
-      - name: Install Miniconda and activate environment
         run: |
-          wget https://repo.continuum.io/miniconda/${{ (matrix.python-version > 2.7 && 'Miniconda3-4.3.11') || 'Miniconda-latest' }}-Linux-x86_64.sh -O miniconda.sh
-          bash miniconda.sh -b -p $HOME/miniconda
-          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
-          hash -r
-          conda config --set always_yes yes --set changeps1 no
-          conda update -q conda
           conda info -a
 
       - name: Upgrade pip before installation
