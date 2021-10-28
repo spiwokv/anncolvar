@@ -45,14 +45,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano
+          pip install numpy nose h5py theano
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
           conda install mkl mkl-service
           conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
 
       - name: Install CNTK
-        if: contains( matrix.variant, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
+        if: contains( matrix.keras-backend, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
         run: |
           python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-${{ (matrix.python-version > 2.7 && 'cp36-cp36m') || 'cp27-cp27mu' }}-linux_x86_64.whl
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
