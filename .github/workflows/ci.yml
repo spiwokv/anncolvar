@@ -44,7 +44,6 @@ jobs:
 
       - name: Install another dependencies
         run: |
-          pip install -r requirements.txt
           conda install mkl mkl-service ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
 
