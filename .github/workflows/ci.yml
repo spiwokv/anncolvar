@@ -11,6 +11,7 @@ env:
 
 jobs:
   install-anncolvar:
+    name: Anncolvar (${{ matrix.os }}, python ${{ matrix.python-version }}, ${{ matrix.keras-backend }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -39,7 +40,7 @@ jobs:
       - name: Upgrade pip before installation
         run: |
           python --version
-          python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3' }}
+          python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3' }} setuptools
 
       - name: Install another dependencies
         run: |
