@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, ubuntu-18.04 ]
-        python-version: [ 2.7 ]
+        python-version: [ 2.7, 3.6 ]
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
@@ -46,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --only-binary=numpy nose cython h5py theano
-          pip install argparse keras tensorflow codecov
+          pip install argparse keras tensorflow codecov setuptools
           conda install mkl mkl-service
           conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
