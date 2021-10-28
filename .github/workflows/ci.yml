@@ -34,6 +34,8 @@ jobs:
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda info -a
+          conda create -q -n test-environment python=${{ matrix.python-version }} pytest-cov pandas
+          source activate test-environment
           echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
           echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
 
