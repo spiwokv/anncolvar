@@ -31,13 +31,13 @@ jobs:
         run: |
           wget https://repo.continuum.io/miniconda/${{ (matrix.python-version > 2.7 && 'Miniconda3-4.3.11') || 'Miniconda-latest' }}-Linux-x86_64.sh -O miniconda.sh
           bash miniconda.sh -b -p $HOME/miniconda
+          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
+          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pytest-cov pandas
-          conda activate test-environment
-          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
-          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
+          source activate test-environment
 
       - name: Upgrade pip before installation
         run: |
