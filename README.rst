@@ -197,7 +197,7 @@ METAD).
     :alt: Latest version released on Anaconda Cloud
 
 .. |BuildStatus| image:: https://github.com/mareskav/anncolvar/actions/workflows/ci.yml/badge.svg
-    :target: https://github.com/mareskav/anncolvar/
+    :target: https://github.com/mareskav/anncolvar/actions/workflows/ci.yml/badge.svg
     :alt: Build status of the master branch on Mac/Linux at Travis-CI
 
 .. |codecov| image:: https://github.com/github/docs/actions/workflows/ci.yml/badge.svg
