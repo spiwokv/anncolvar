@@ -31,11 +31,11 @@ jobs:
         run: |
           wget https://repo.continuum.io/miniconda/${{ (matrix.python-version > 2.7 && 'Miniconda3-4.3.11') || 'Miniconda-latest' }}-Linux-x86_64.sh -O miniconda.sh
           bash miniconda.sh -b -p $HOME/miniconda
-          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
-          hash -r
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda info -a
+          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
+          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
 
       - name: Upgrade pip before installation
         run: |
@@ -44,18 +44,20 @@ jobs:
 
       - name: Install another dependencies
         run: |
-          pip install --only-binary=numpy numpy nose cython h5py theano
-          pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
-          conda install mkl mkl-service
-          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
-          conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
+          pip install -r requirements.txt
+          conda install mkl mkl-service ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
 
-      - name: Keras and MPI configurations
+      - name: Install CNTK
+        if: contains( matrix.variant, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
         run: |
           python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-${{ (matrix.python-version > 2.7 && 'cp36-cp36m') || 'cp27-cp27mu' }}-linux_x86_64.whl
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
+
+      - name: MPI configurations
+        if: contains( matrix.variant, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
+        run: |
           rm -rf ~/mpi
           mkdir ~/mpi
           pushd ~/mpi
@@ -70,13 +72,14 @@ jobs:
           sudo apt-get install -y ccache
           git clone https://github.com/plumed/plumed2.git
           cd plumed2
-          ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) CXXFLAGS="$PLUMED_CXXFLAGS" LDFLAGS="$PLUMED_LDFLAGS" CPPFLAGS="$PLUMED_CPPFLAGS" $CONFIG_FLAGS --prefix="$HOME/opt" --enable-modules=annfunc
+          ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) --prefix="$HOME/opt" --enable-modules=annfunc
           make -j 4
           make install
           cd ..
 
       - name: Build app and run tests
         run: |
+          python setup.py install
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"

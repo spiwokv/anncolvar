@@ -6,7 +6,7 @@ with open(path.join(this_directory, 'README.rst')) as f:
     long_description = f.read()
 
 setup(name='anncolvar',
-      version='0.8',
+      version='0.9',
       description='Coding collective variables by artificial neural networks',
       long_description=long_description,
       long_description_content_type='text/x-rst',
@@ -32,6 +32,8 @@ setup(name='anncolvar',
           'argparse',
           'datetime',
           'codecov',
+          'pandas',
+          'tensorflow'
       ],
       include_package_data=True,
       zip_safe=False)
