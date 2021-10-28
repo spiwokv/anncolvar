@@ -24,7 +24,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          path: ~/.ccache
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
       - name: Install Miniconda and activate environment
