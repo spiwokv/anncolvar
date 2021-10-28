@@ -47,7 +47,7 @@ jobs:
           pip install --only-binary=numpy numpy nose cython h5py theano
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
           conda update --all
-          conda install mkl mkl-service qt pyqt
+          conda install mkl mkl-service
           echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
           conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
