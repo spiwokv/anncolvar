@@ -46,7 +46,8 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --only-binary=numpy nose cython h5py theano
-          pip install argparse keras tensorflow codecov setuptools
+          pip install --ignore-installed pyOpenSSL twilio
+          pip install argparse tensorflow codecov
           conda install mkl mkl-service
           conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
