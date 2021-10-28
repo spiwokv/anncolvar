@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, ubuntu-18.04 ]
-        python-version: [ 2.7, 3.6 ]
+        python-version: [ 2.7 ]
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
@@ -42,10 +42,11 @@ jobs:
           python --version
           python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3' }}
 
-      - name: Install another dependencies
+      - name: Install dependencies
         run: |
-          pip install --only-binary=numpy numpy nose cython h5py theano
-          pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
+          pip install --only-binary=numpy numpy scipy nose cython h5py theano
+          pip install --ignore-installed pyOpenSSL twilio
+          pip install argparse keras tensorflow codecov
           conda install mkl mkl-service
           conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
@@ -58,7 +59,6 @@ jobs:
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
 
       - name: MPI configurations
-        if: contains( matrix.variant, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
         run: |
           rm -rf ~/mpi
           mkdir ~/mpi
@@ -81,7 +81,6 @@ jobs:
 
       - name: Build app and run tests
         run: |
-          python setup.py install
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
