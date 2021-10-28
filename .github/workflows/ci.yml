@@ -6,6 +6,8 @@ env:
   CORE_CHANGED: false
   APP_CHANGED: false
   MKL_THREADING_LAYER: GNU
+  PLUMED_CC: gcc
+  PLUMED_CXX: g++
 
 jobs:
   install-anncolvar:
@@ -15,13 +17,14 @@ jobs:
         os: [ ubuntu-latest, ubuntu-18.04 ]
         python-version: [ 2.7, 3.6 ]
         keras-backend:
-          - KERAS_BACKEND=tensorflow PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
-          - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug"
-          - KERAS_BACKEND=cntk PYTHONWARNINGS=ignore PLUMED_CC=gcc PLUMED_CXX=g++ CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+          - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+          - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
+          - KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
 
     steps:
       - uses: actions/checkout@v2
         with:
+          path: ~/.ccache
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
       - name: Install Miniconda and activate environment
@@ -36,11 +39,12 @@ jobs:
 
       - name: Upgrade pip before installation
         run: |
+          python --version
           python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3' }}
 
       - name: Install another dependencies
         run: |
-          pip install --only-binary=numpy numpy nose cython h5py theano
+          pip install --only-binary=numpy numpy nose cython h5py theano codecov
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow
           conda install mkl mkl-service
           echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
@@ -49,7 +53,6 @@ jobs:
 
       - name: Keras and MPI configurations
         run: |
-          python --version
           python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-${{ (matrix.python-version > 2.7 && 'cp36-cp36m') || 'cp27-cp27mu' }}-linux_x86_64.whl
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
@@ -63,6 +66,7 @@ jobs:
 
       - name: Install Plumed 2
         run: |
+          sudo apt-get update -qq
           sudo apt-get install -y ccache
           git clone https://github.com/plumed/plumed2.git
           cd plumed2
@@ -73,7 +77,6 @@ jobs:
 
       - name: Build app and run tests
         run: |
-          export MKL_THREADING_LAYER="GNU"
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
