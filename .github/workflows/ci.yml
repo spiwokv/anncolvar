@@ -44,6 +44,7 @@ jobs:
 
       - name: Install another dependencies
         run: |
+          pip install numpy nose cython h5py theano
           conda install mkl mkl-service ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
 
