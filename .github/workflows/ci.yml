@@ -40,7 +40,8 @@ jobs:
       - name: Upgrade pip before installation
         run: |
           python --version
-          python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3' }} setuptools
+          python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3' }}
+          pip install --upgrade setuptools
 
       - name: Install another dependencies
         run: |
