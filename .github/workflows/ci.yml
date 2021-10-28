@@ -35,7 +35,7 @@ jobs:
           conda update -q conda
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pytest-cov pandas
-          source activate test-environment
+          conda activate test-environment
           echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
           echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
 
@@ -46,8 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --only-binary=numpy numpy scipy nose cython h5py theano
-          pip install --ignore-installed pyOpenSSL twilio
+          pip install --only-binary=numpy nose cython h5py theano
           pip install argparse keras tensorflow codecov
           conda install mkl mkl-service
           conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
