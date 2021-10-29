@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, ubuntu-18.04 ]
-        python-version: [ 2.7, 3.6 ]
+        python-version: [ 2.7 ]
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
