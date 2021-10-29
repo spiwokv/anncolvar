@@ -48,6 +48,7 @@ jobs:
         run: |
           pip install --no-binary numpy cython nose h5py theano
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
+          pip install mdtraj
           conda install mkl mkl-service
           conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
