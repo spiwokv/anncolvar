@@ -8,6 +8,7 @@ env:
   MKL_THREADING_LAYER: GNU
   PLUMED_CC: gcc
   PLUMED_CXX: g++
+  CUDA_VISIBLE_DEVICES: -1
 
 jobs:
   install-anncolvar:
