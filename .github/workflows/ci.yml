@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano tqdm pillow pytest
+          pip install numpy nose cython h5py theano tqdm pillow pytest-cov
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
           conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
@@ -86,5 +86,5 @@ jobs:
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
-          KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH py.test --cov=anncolvar tests/;
+          KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH py.test --cov=anncolvar tests/
 
