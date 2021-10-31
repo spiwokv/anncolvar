@@ -66,7 +66,7 @@ jobs:
           popd
 
       - name: Update Ubuntu packages and install ccache
-        if: !contains( matrix.os, 'macos-latest' )
+        if: ${{ startsWith( matrix.os , 'ubuntu') }}
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y ccache
