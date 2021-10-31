@@ -12,7 +12,7 @@ env:
 
 jobs:
   install-anncolvar:
-    name: Anncolvar (${{ matrix.os }}, python ${{ matrix.python-version }}, ${{ matrix.keras-backend }})
+    name: ${{ matrix.os }}, python ${{ matrix.python-version }}, ${{ matrix.keras-backend }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
-      - name: Install Miniconda and activate environment
+      - name: Install Miniconda
         run: |
           wget https://repo.continuum.io/miniconda/${{ (matrix.python-version > 2.7 && 'Miniconda3-4.3.11') || 'Miniconda-latest' }}-Linux-x86_64.sh -O miniconda.sh
           bash miniconda.sh -b -p $HOME/miniconda
@@ -39,27 +39,24 @@ jobs:
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pytest-cov pandas
 
-      - name: Upgrade pip before installation
+      - name: Upgrade pip for python ${{ matrix.python-version }}
         run: |
           python --version
           python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3.4' }}
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano tqdm pillow
+          pip install numpy nose cython h5py theano tqdm pillow pytest
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
           conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
 
-      - name: Install CNTK
+      - name: Install CNTK and configure MPI
         if: contains( matrix.keras-backend, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
         run: |
           python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-${{ (matrix.python-version > 2.7 && 'cp36-cp36m') || 'cp27-cp27mu' }}-linux_x86_64.whl
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
-
-      - name: MPI configurations
-        run: |
           rm -rf ~/mpi
           mkdir ~/mpi
           pushd ~/mpi
@@ -68,10 +65,14 @@ jobs:
           sudo dpkg -i openmpi_1.10-3.deb
           popd
 
-      - name: Install Plumed 2
+      - name: Update Ubuntu packages and install ccache
+        if: !contains( matrix.os, 'macos-latest' )
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y ccache
+
+      - name: Install Plumed 2
+        run: |
           git clone https://github.com/plumed/plumed2.git
           cd plumed2
           ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) --prefix="$HOME/opt" --enable-modules=annfunc
@@ -79,7 +80,7 @@ jobs:
           make install
           cd ..
 
-      - name: Build app and run tests
+      - name: Run tests
         run: |
           ${{ (matrix.python-version > 2.7 && '') || 'python -c "from __future__ import print_function"' }}
           python -c "import keras.backend"
