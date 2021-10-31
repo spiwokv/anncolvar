@@ -46,6 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install tqdm
           conda install -c conda-forge mdtraj mkl mkl-service
           conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
