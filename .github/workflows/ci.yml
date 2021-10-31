@@ -42,11 +42,12 @@ jobs:
       - name: Upgrade pip before installation
         run: |
           python --version
-          python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3' }}
+          python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3.4' }}
 
       - name: Install dependencies
         run: |
-          pip install tqdm
+          pip install numpy nose cython h5py theano
+          pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
           conda install -c conda-forge mdtraj mkl mkl-service
           conda install ${{ (matrix.python-version > 2.7 && 'Pillow') || 'Pil' }}
           pip install -e .[tests]
