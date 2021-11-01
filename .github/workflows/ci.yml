@@ -37,7 +37,7 @@ jobs:
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda info -a
-          conda create -q -n test-environment python=${{ matrix.python-version }}
+          conda create -q -n test-environment python=${{ matrix.python-version }} pytest-cov pandas
 
       - name: Upgrade pip for python ${{ matrix.python-version }}
         run: |
@@ -46,9 +46,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano tqdm pillow
+          pip install numpy nose cython h5py theano tqdm pillow pytest-cov
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
-          conda install -c conda-forge mdtraj mkl mkl-service pandas pytest
+          conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
 
       - name: Install CNTK and configure MPI
@@ -86,5 +86,5 @@ jobs:
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
-          KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH pytest tests/
+          KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH pytest --cov=anncolvar tests/
 
