@@ -37,7 +37,7 @@ jobs:
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda info -a
-          conda create -q -n test-environment python=${{ matrix.python-version }} pytest-cov pandas
+          conda create -q -n test-environment python=${{ matrix.python-version }}
 
       - name: Upgrade pip for python ${{ matrix.python-version }}
         run: |
@@ -46,9 +46,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano tqdm pillow pytest
+          pip install numpy nose cython h5py theano tqdm pillow
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
-          conda install -c conda-forge mdtraj mkl mkl-service
+          conda install -c conda-forge mdtraj mkl mkl-service pandas pytest
           pip install -e .[tests]
 
       - name: Install CNTK and configure MPI
