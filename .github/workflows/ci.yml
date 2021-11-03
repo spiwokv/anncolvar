@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install numpy nose cython h5py theano tqdm pillow pytest-cov
-          pip install --ignore-installed pyOpenSSL twilio argparse tensorflow codecov
+          pip install --ignore-installed pyOpenSSL twilio argparse tensorflow
           conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
 
