@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, ubuntu-18.04 ]
-        python-version: [ 2.7, 3.6 ]
+        python-version: [ 3.7 ]
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
@@ -30,14 +30,14 @@ jobs:
           env: ${{ matrix.keras-backend }}
       - name: Install Miniconda
         run: |
-          wget https://repo.continuum.io/miniconda/${{ (matrix.python-version > 2.7 && 'Miniconda3-4.3.11') || 'Miniconda-latest' }}-Linux-x86_64.sh -O miniconda.sh
+          wget https://repo.continuum.io/miniconda/Miniconda3-4.3.11-Linux-x86_64.sh -O miniconda.sh
           bash miniconda.sh -b -p $HOME/miniconda
           echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
           echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda info -a
-          conda create -q -n test-environment python=${{ matrix.python-version }} pytest-cov pandas
+          conda create -q -n test-environment python=${{ matrix.python-version }}
 
       - name: Upgrade pip for python ${{ matrix.python-version }}
         run: |
@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano tqdm pillow pytest-cov
+          pip install numpy nose cython h5py theano tqdm pillow pytest-cov pandas
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow
           conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
@@ -54,7 +54,7 @@ jobs:
       - name: Install CNTK and configure MPI
         if: contains( matrix.keras-backend, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
         run: |
-          python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-${{ (matrix.python-version > 2.7 && 'cp36-cp36m') || 'cp27-cp27mu' }}-linux_x86_64.whl
+          python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-cp36-cp36m-linux_x86_64.whl
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
           rm -rf ~/mpi
@@ -82,9 +82,8 @@ jobs:
 
       - name: Run tests
         run: |
-          ${{ (matrix.python-version > 2.7 && '') || 'python -c "from __future__ import print_function"' }}
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
-          KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH pytest --cov=anncolvar tests/
+          KERAS_BACKEND=$KERAS_BACKEND pytest --cov=anncolvar tests/
 
