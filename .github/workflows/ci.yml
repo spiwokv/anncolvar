@@ -42,11 +42,11 @@ jobs:
       - name: Upgrade pip for python ${{ matrix.python-version }}
         run: |
           python --version
-          python -m pip install --upgrade ${{ (matrix.python-version > 2.7 && 'pip') || 'pip==20.3.4' }}
+          python -m pip install --upgrade pip
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano tqdm pillow pytest-cov pandas
+          pip install numpy nose cython h5py theano tqdm pillow pytest-cov pandas sqlite
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow
           conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
@@ -85,5 +85,5 @@ jobs:
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
-          KERAS_BACKEND=$KERAS_BACKEND pytest --cov=anncolvar tests/
+          KERAS_BACKEND=$KERAS_BACKEND PYTHONPATH=$PWD:$PYTHONPATH pytest --cov=anncolvar tests/
 
