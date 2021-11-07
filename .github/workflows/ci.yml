@@ -40,9 +40,9 @@ jobs:
       - name: Set Miniconda env
         run: |
           conda config --set always_yes yes --set changeps1 no
-          conda update -q conda
           conda info -a
-          conda create -q -n test-environment python=${{ matrix.python-version }} pandas
+          conda install pandas
+          conda activate test
 
       - name: Upgrade pip for python ${{ matrix.python-version }}
         run: |
@@ -59,7 +59,7 @@ jobs:
       - name: Install CNTK and configure MPI
         if: contains( matrix.keras-backend, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
         run: |
-          python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-cp36-cp36m-linux_x86_64.whl
+          pip install cntk
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
           for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
           rm -rf ~/mpi
@@ -92,6 +92,5 @@ jobs:
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
-          conda activate test-environment
           KERAS_BACKEND=$KERAS_BACKEND pytest --cov=anncolvar tests/
 
