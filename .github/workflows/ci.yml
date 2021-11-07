@@ -49,10 +49,10 @@ jobs:
         run: |
           python --version
           python -m pip install --upgrade pip
+          pip install numpy nose cython h5py theano tqdm pytest pytest-cov argparse tensorflow
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano tqdm pytest pytest-cov argparse tensorflow
           conda install mdtraj mkl mkl-service
           pip install -e .[tests]
 
