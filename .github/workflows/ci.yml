@@ -56,8 +56,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano tqdm pytest pytest-cov tensorflow
-          conda install mdtraj mkl mkl-service
+          pip install numpy nose cython h5py theano tqdm pytest pytest-cov argparse tensorflow
+          conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
 
 #      CNTK is only maintained since 2019. CNTK 2.7 was the last release. More info: https://github.com/microsoft/CNTK
