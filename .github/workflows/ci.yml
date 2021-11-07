@@ -78,20 +78,15 @@ jobs:
           ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) --prefix="$HOME/opt" --enable-modules=annfunc
           make -j 4
           make install
-          echo "/home/warllock/App/plumed-2.7.2/src/lib/:$PATH" >> GITHUB_PATH
-          echo "/home/warllock/App/plumed-2.7.2/src/lib/:$LIBRARY_PATH" >> GITHUB_PATH
-          echo "/home/warllock/App/plumed-2.7.2/src/lib/:$LD_LIBRARY_PATH" >> GITHUB_PATH
-          echo "/home/warllock/App/plumed-2.7.2/src/lib/libplumedKernel.so" >> GITHUB_PATH
-          echo "/home/warllock/App/plumed-2.7.2/vim" >> GITHUB_PATH
-          echo "/home/warllock/App/plumed-2.7.2/python:$PYTHONPATH" >> GITHUB_PATH
+          source sourceme.sh
           plumed -h
           cd ..
-
 
       - name: Run tests
         env:
           COVERAGE_FILE: .coverage.${{matrix.python-version}}
         run: |
+          plumed -h
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
