@@ -41,19 +41,21 @@ jobs:
       - name: Set Miniconda env
         shell: bash -l {0}
         run: |
+          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
+          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
           conda config --set always_yes yes --set changeps1 no
-          conda info -a
+          conda update -q conda
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
 
       - name: Upgrade pip for python ${{ matrix.python-version }}
         run: |
           python --version
           python -m pip install --upgrade pip
-          pip install numpy nose cython h5py theano tqdm pytest pytest-cov argparse tensorflow
 
       - name: Install dependencies
         run: |
-          conda install mdtraj mkl mkl-service
+          pip install numpy nose cython h5py theano tqdm pytest pytest-cov argparse tensorflow
+          conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
 
 #      CNTK is only maintained since 2019. CNTK 2.7 was the last release. More info: https://github.com/microsoft/CNTK
@@ -88,7 +90,7 @@ jobs:
           source sourceme.sh
           plumed -h
           cd ..
-          conda activate test
+          conda activate test-environment
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"

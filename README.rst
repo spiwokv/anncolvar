@@ -112,7 +112,7 @@ CNTK. For this follow one of these links:
 
 - TensorFlow_
 - Theano_
-- CNTK_
+- CNTK_ (CNTK 2.7 is the last release since 2019)
 
 Install numpy and cython by PIP::
 
