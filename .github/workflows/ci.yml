@@ -21,7 +21,6 @@ jobs:
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
-          - KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
 
     steps:
       - uses: actions/checkout@v2
@@ -49,11 +48,11 @@ jobs:
         run: |
           python --version
           python -m pip install --upgrade pip
-          pip install numpy nose cython h5py theano tqdm pytest pytest-cov argparse tensorflow
 
       - name: Install dependencies
         run: |
-          conda install -c conda-forge mdtraj mkl mkl-service
+          pip install numpy nose cython h5py theano tqdm pytest pytest-cov argparse tensorflow
+          conda install mdtraj mkl mkl-service
           pip install -e .[tests]
 
 #      - name: Install CNTK and configure MPI
