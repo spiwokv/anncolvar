@@ -59,7 +59,7 @@ jobs:
           pip install numpy nose cython h5py theano tqdm pytest pytest-cov tensorflow
           conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
-
+          
 #      - name: Install CNTK and configure MPI
 #        CNTK is only maintained since 2019. CNTK 2.7 was the last release. More info: https://github.com/microsoft/CNTK
 #        It´s is still possible to run CNTK, but with exact wheel version for every matrix.python-version
