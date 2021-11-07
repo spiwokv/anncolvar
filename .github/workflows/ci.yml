@@ -53,7 +53,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          conda install mdtraj mkl mkl-service
+          conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
 
 #      - name: Install CNTK and configure MPI
