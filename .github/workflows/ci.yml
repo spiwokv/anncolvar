@@ -34,6 +34,7 @@ jobs:
         with:
             channels: conda-forge
             python-version: ${{ matrix.python-version }}
+            activate-environment: test-environment
             auto-update-conda: true
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
@@ -41,8 +42,6 @@ jobs:
       - name: Set Miniconda env
         shell: bash -l {0}
         run: |
-          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
-          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
