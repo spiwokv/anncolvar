@@ -30,12 +30,12 @@ jobs:
           env: ${{ matrix.keras-backend }}
 
       - name: Download Miniconda for python 3.6.3
-        if: contains( matrix.python-version, "3.6.3" )
+        if: contains( matrix.python-version, 3.6.3 )
         run: |
           - wget https://repo.continuum.io/miniconda/Miniconda3-4.3.31-Linux-x86_64.sh -O miniconda.sh
 
       - name: Download Miniconda for python 3.7
-        if: contains( matrix.python-version, "3.7" )
+        if: contains( matrix.python-version, 3.7 )
         run: |
           - wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-Linux-x86_64.sh -O miniconda.sh
 
