@@ -34,7 +34,6 @@ jobs:
         with:
             channels: conda-forge
             python-version: ${{ matrix.python-version }}
-            activate-environment: test-environment
             auto-update-conda: true
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
@@ -50,11 +49,11 @@ jobs:
         run: |
           python --version
           python -m pip install --upgrade pip
+          pip install numpy nose cython h5py theano tqdm pytest pytest-cov argparse tensorflow
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano tqdm pytest pytest-cov argparse tensorflow
-          conda install -c conda-forge mdtraj mkl mkl-service
+          conda install mdtraj mkl mkl-service
           pip install -e .[tests]
 
 #      CNTK is only maintained since 2019. CNTK 2.7 was the last release. More info: https://github.com/microsoft/CNTK
