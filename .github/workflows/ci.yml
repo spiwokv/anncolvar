@@ -77,7 +77,6 @@ jobs:
           cd plumed2
           ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) --prefix="$HOME/opt" --enable-modules=annfunc
           make -j 4
-          make check
           make install
           source sourceme.sh
           plumed -h
