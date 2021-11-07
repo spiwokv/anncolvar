@@ -60,21 +60,21 @@ jobs:
           conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
 
-#      CNTK is only maintained since 2019. CNTK 2.7 was the last release. More info: https://github.com/microsoft/CNTK
-#      It´s is still possible to run CNTK, but with exact wheel version for every matrix.python-version
-#      - name: Install CNTK and configure MPI
-#        if: contains( matrix.keras-backend, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
-#        run: |
-#          python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-cp36-cp36m-linux_x86_64.whl
-#          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
-#          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
-#          rm -rf ~/mpi
-#          mkdir ~/mpi
-#          pushd ~/mpi
-#          wget http://cntk.ai/PythonWheel/ForKeras/depends/openmpi_1.10-3.zip
-#          unzip ./openmpi_1.10-3.zip
-#          sudo dpkg -i openmpi_1.10-3.deb
-#          popd
+: #      CNTK is only maintained since 2019. CNTK 2.7 was the last release. More info: https://github.com/microsoft/CNTK
+: #      It´s is still possible to run CNTK, but with exact wheel version for every matrix.python-version
+: #      - name: Install CNTK and configure MPI
+: #        if: contains( matrix.keras-backend, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
+: #        run: |
+: #          python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-cp36-cp36m-linux_x86_64.whl
+: #          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
+: #          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
+: #          rm -rf ~/mpi
+: #          mkdir ~/mpi
+: #          pushd ~/mpi
+: #          wget http://cntk.ai/PythonWheel/ForKeras/depends/openmpi_1.10-3.zip
+: #          unzip ./openmpi_1.10-3.zip
+: #          sudo dpkg -i openmpi_1.10-3.deb
+: #          popd
 
       - name: Update Ubuntu packages and install ccache
         if: ${{ startsWith( matrix.os , 'ubuntu') }}
