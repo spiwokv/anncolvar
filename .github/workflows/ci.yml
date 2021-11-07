@@ -28,12 +28,17 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
+
       - name: Install Miniconda
+        uses: conda-incubator/setup-miniconda@master
+        with:
+            channels: conda-forge
+            python-version: ${{ matrix.python-version }}
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+      - name: Set Miniconda env
         run: |
-          wget https://repo.continuum.io/miniconda/Miniconda3-4.3.11-Linux-x86_64.sh -O miniconda.sh
-          bash miniconda.sh -b -p $HOME/miniconda
-          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
-          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda info -a
@@ -87,5 +92,6 @@ jobs:
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
+          conda activate test-environment
           KERAS_BACKEND=$KERAS_BACKEND pytest --cov=anncolvar tests/
 
