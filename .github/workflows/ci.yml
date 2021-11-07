@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          pip install numpy nose cython h5py theano tqdm pytest pytest-cov argparse tensorflow
           conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
 
