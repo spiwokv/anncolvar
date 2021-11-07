@@ -41,7 +41,6 @@ jobs:
       - name: Set Miniconda env
         shell: bash -l {0}
         run: |
-          conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
 
