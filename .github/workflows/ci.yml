@@ -21,7 +21,6 @@ jobs:
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
-          - KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
 
     steps:
       - uses: actions/checkout@v2
@@ -57,20 +56,6 @@ jobs:
           pip install --ignore-installed pyOpenSSL twilio argparse tensorflow
           conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
-
-      - name: Install CNTK and configure MPI
-        if: contains( matrix.keras-backend, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
-        run: |
-          pip install cntk
-          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
-          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
-          rm -rf ~/mpi
-          mkdir ~/mpi
-          pushd ~/mpi
-          wget http://cntk.ai/PythonWheel/ForKeras/depends/openmpi_1.10-3.zip
-          unzip ./openmpi_1.10-3.zip
-          sudo dpkg -i openmpi_1.10-3.deb
-          popd
 
       - name: Update Ubuntu packages and install ccache
         if: ${{ startsWith( matrix.os , 'ubuntu') }}
