@@ -35,7 +35,6 @@ jobs:
           echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
           echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
           conda config --set always_yes yes --set changeps1 no
-          conda config --append channels conda-forge
           conda update -q conda
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
@@ -47,24 +46,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install numpy nose cython h5py theano tqdm pytest pytest-cov
-          pip install --ignore-installed pyOpenSSL twilio argparse tensorflow
-          conda install mdtraj mkl mkl-service
+          conda install numpy nose cython h5py theano tqdm pytest pytest-cov tensorflow
+          conda install -c conda-forge mdtraj mkl mkl-service
           pip install -e .[tests]
-
-#      - name: Install CNTK and configure MPI
-#        if: contains( matrix.keras-backend, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
-#        run: |
-#          python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-cp36-cp36m-linux_x86_64.whl
-#          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
-#          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
-#          rm -rf ~/mpi
-#          mkdir ~/mpi
-#          pushd ~/mpi
-#          wget http://cntk.ai/PythonWheel/ForKeras/depends/openmpi_1.10-3.zip
-#          unzip ./openmpi_1.10-3.zip
-#          sudo dpkg -i openmpi_1.10-3.deb
-#          popd
 
       - name: Update Ubuntu packages and install ccache
         if: ${{ startsWith( matrix.os , 'ubuntu') }}
