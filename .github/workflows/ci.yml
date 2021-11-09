@@ -39,6 +39,11 @@ jobs:
         run: |
           wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
 
+      - name: Setup conda for MacOS
+        if: ${{ startsWith( matrix.os , 'macos') }}
+        run: |
+          source $CONDA/etc/profile.d/conda.sh
+
       - name: Install Miniconda
         run: |
           bash miniconda.sh -b -p $HOME/miniconda
