@@ -63,15 +63,15 @@ jobs:
 
       - name: Upgrade pip for python ${{ matrix.python-version }}
         run: |
-          python --version
-          python -m pip install --upgrade pip
+          python3 --version
+          python3 -m pip install --upgrade pip
 
       - name: Install dependencies
         run: |
-          pip install tensorflow
+          pip3 install tensorflow
           conda install numpy nose cython h5py theano tqdm pytest pytest-cov
           conda install -c conda-forge mdtraj mkl mkl-service
-          pip install -e .[tests]
+          pip3 install -e .[tests]
 
 #        CNTK is only maintained since 2019. CNTK 2.7 is the last release. More info: https://github.com/microsoft/CNTK
 #        It´s is still possible to run CNTK, but with exact wheel version for every matrix.python-version
