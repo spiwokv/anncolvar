@@ -43,7 +43,7 @@ jobs:
         if: ${{ startsWith( matrix.os , 'macos') }}
         run: |
           bash miniconda.sh -b -p $HOME/miniconda
-          sudo chown 501:20 /usr/local/miniconda/pkgs/cache/53d7ef51.json
+          sudo chown 501:20 $HOME/miniconda/pkgs/cache/53d7ef51.json
           echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
           echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
           conda config --set always_yes yes --set changeps1 no
