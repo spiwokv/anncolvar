@@ -25,6 +25,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
@@ -42,10 +43,6 @@ jobs:
       - name: Setup conda for MacOS
         if: ${{ startsWith( matrix.os , 'macos') }}
         run: |
-          bash miniconda.sh -b -p $HOME/miniconda
-          sudo chown 501:20 $HOME/miniconda/pkgs/cache/53d7ef51.json
-          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
-          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda info -a
