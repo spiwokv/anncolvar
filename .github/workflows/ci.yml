@@ -16,8 +16,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ macos-latest ]
-        python-version: [ 3.6.3, 3.7 ]
+        os: [ ubuntu-latest, ubuntu-18.04 ]
+        python-version: [ 3.6.3, 3.7, 3.8 ]
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
@@ -29,18 +29,22 @@ jobs:
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
 
-      - name: Download Miniconda for ${{ matrix.os }} and python 3.6.3
+      - name: Download Miniconda for python 3.6.3
         if: contains( matrix.python-version, '3.6.3' )
         run: |
-          wget https://repo.continuum.io/miniconda/Miniconda3-4.3.31-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
+          wget https://repo.continuum.io/miniconda/Miniconda3-4.3.31-Linux-x86_64.sh -O miniconda.sh
 
-      - name: Download Miniconda for ${{ matrix.os }} and python 3.7
+      - name: Download Miniconda for python 3.7
         if: contains( matrix.python-version, '3.7' )
         run: |
-          wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
+          wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-Linux-x86_64.sh -O miniconda.sh
+
+      - name: Download Miniconda for python 3.8
+        if: contains( matrix.python-version, '3.8' )
+        run: |
+          wget https://repo.continuum.io/miniconda/Miniconda3-py38_4.10.3-Linux-x86_64.sh -O miniconda.sh
 
       - name: Install Miniconda
-        if: ${{ startsWith( matrix.os , 'ubuntu') }}
         run: |
           bash miniconda.sh -b -p $HOME/miniconda
           echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
@@ -50,28 +54,17 @@ jobs:
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
 
-      - name: Setup conda for MacOS
-        if: ${{ startsWith( matrix.os , 'macos') }}
-        run: |
-          /usr/bin/sudo chown -R runner:staff /usr/local/miniconda
-          bash miniconda.sh -b -p $HOME/miniconda
-          /usr/local/miniconda/condabin/conda init --all
-          conda config --set always_yes yes --set changeps1 no
-          conda install python=${{ matrix.python-version }}
-          conda info -a
-          conda create -q -n test-environment python=${{ matrix.python-version }} pandas
-
       - name: Upgrade pip for python ${{ matrix.python-version }}
         run: |
-          python3 --version
-          python3 -m pip install --upgrade pip
+          python --version
+          python -m pip install --upgrade pip
 
       - name: Install dependencies
         run: |
-          pip3 install tensorflow
+          pip install tensorflow
           conda install numpy nose cython h5py theano tqdm pytest pytest-cov
-          conda install -c conda-forge mdtraj mkl mkl-service plumed
-          pip3 install -e .[tests]
+          conda install -c conda-forge mdtraj mkl mkl-service
+          pip install -e .[tests]
 
 #        CNTK is only maintained since 2019. CNTK 2.7 is the last release. More info: https://github.com/microsoft/CNTK
 #        It´s is still possible to run CNTK, but with exact wheel version for every matrix.python-version
@@ -97,6 +90,14 @@ jobs:
 
       - name: Install Plumed 2 and run tests
         run: |
+          git clone https://github.com/plumed/plumed2.git
+          cd plumed2
+          ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) --prefix="$HOME/opt" --enable-modules=annfunc
+          make -j 4
+          make install
+          source sourceme.sh
+          plumed -h
+          cd ..
           python -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
