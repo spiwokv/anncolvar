@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, ubuntu-18.04 ]
+        os: [ macos-latest ]
         python-version: [ 3.6.3, 3.7 ]
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
@@ -29,15 +29,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
           env: ${{ matrix.keras-backend }}
 
-      - name: Download Miniconda for python 3.6.3
+      - name: Download Miniconda for ${{ matrix.os }} and python 3.6.3
         if: contains( matrix.python-version, '3.6.3' )
         run: |
-          wget https://repo.continuum.io/miniconda/Miniconda3-4.3.31-Linux-x86_64.sh -O miniconda.sh
+          wget https://repo.continuum.io/miniconda/Miniconda3-4.3.31-${{ (startsWith(matrix.os,  'ubuntu' ) && 'Linux') || 'MacOSX' }}-x86_64.sh -O miniconda.sh
 
-      - name: Download Miniconda for python 3.7
-        if: contains( matrix.python-version, '3.7' )
+      - name: Download Miniconda for ${{ matrix.os }} and python 3.7
+        if: |
+          startsWith( matrix.os, 'ubuntu' ) &&contains( matrix.python-version, '3.7' )
         run: |
-          wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-Linux-x86_64.sh -O miniconda.sh
+          wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-${{ (startsWith(matrix.os,  'ubuntu' ) && 'Linux') || 'MacOSX' }}-x86_64.sh -O miniconda.sh
 
       - name: Install Miniconda
         run: |
