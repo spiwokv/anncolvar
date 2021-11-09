@@ -95,6 +95,12 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y ccache
 
+      - name: Install MacOS packages
+        if: ${{ startsWith( matrix.os , 'macos') }}
+        run: |
+          brew update > /dev/null
+          brew install gawk
+
       - name: Install Plumed 2 and run tests
         run: |
           git clone https://github.com/plumed/plumed2.git
