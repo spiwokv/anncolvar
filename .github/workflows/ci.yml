@@ -42,7 +42,7 @@ jobs:
       - name: Setup conda for MacOS
         if: ${{ startsWith( matrix.os , 'macos') }}
         run: |
-          sudo chown 501:20 /usr/local/miniconda/pkgs/cache/*.json
+          sudo chown 501:20 /usr/local/miniconda/pkgs/cache/53d7ef51.json
 
       - name: Install Miniconda
         run: |
