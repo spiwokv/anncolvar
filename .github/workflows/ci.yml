@@ -49,7 +49,7 @@ jobs:
 
       - name: Install Miniconda
         run: |
-          sudo bash miniconda.sh -b -p $HOME/miniconda
+          bash miniconda.sh -b -p $HOME/miniconda
           echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
           echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
           conda config --set always_yes yes --set changeps1 no
