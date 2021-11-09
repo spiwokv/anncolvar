@@ -32,13 +32,13 @@ jobs:
       - name: Download Miniconda for ${{ matrix.os }} and python 3.6.3
         if: contains( matrix.python-version, '3.6.3' )
         run: |
-          wget https://repo.continuum.io/miniconda/Miniconda3-4.3.31-${{ (startsWith(matrix.os,  'ubuntu' ) && 'Linux') || 'MacOSX' }}-x86_64.sh -O miniconda.sh
+          wget https://repo.continuum.io/miniconda/Miniconda3-4.3.31-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
 
       - name: Download Miniconda for ${{ matrix.os }} and python 3.7
         if: |
           startsWith( matrix.os, 'ubuntu' ) &&contains( matrix.python-version, '3.7' )
         run: |
-          wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-${{ (startsWith(matrix.os,  'ubuntu' ) && 'Linux') || 'MacOSX' }}-x86_64.sh -O miniconda.sh
+          wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
 
       - name: Install Miniconda
         run: |
