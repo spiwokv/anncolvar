@@ -42,12 +42,17 @@ jobs:
       - name: Setup conda for MacOS
         if: ${{ startsWith( matrix.os , 'macos') }}
         run: |
-          echo "unset SUDO_UID SUDO_GID SUDO_USER" >> ~/.zshrc
-          echo "unset SUDO_UID SUDO_GID SUDO_USER" >> ~/.bashrc
-          source ~/.zshrc
-          source ~/.bashrc
+          bash miniconda.sh -b -p $HOME/miniconda
+          sudo chown 501:20 /usr/local/miniconda/pkgs/cache/53d7ef51.json
+          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
+          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
+          conda config --set always_yes yes --set changeps1 no
+          conda update -q conda
+          conda info -a
+          conda create -q -n test-environment python=${{ matrix.python-version }} pandas
 
       - name: Install Miniconda
+        if: ${{ startsWith( matrix.os , 'ubuntu') }}
         run: |
           bash miniconda.sh -b -p $HOME/miniconda
           echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
