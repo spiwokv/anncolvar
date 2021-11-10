@@ -51,6 +51,7 @@ jobs:
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
 
       - name: Setup conda for MacOS
+        shell: bash
         if: ${{ startsWith( matrix.os , 'macos') }}
         run: |
           /usr/bin/sudo chown -R runner:staff /usr/local/miniconda
