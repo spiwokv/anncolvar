@@ -56,8 +56,6 @@ jobs:
           /usr/bin/sudo chown -R runner:staff /usr/local/miniconda
           bash miniconda.sh -b -p $HOME/miniconda
           /usr/local/miniconda/condabin/conda init --all
-          gcc -v
-          sudo ln -s gcc gcc-4.2
           conda config --set always_yes yes --set changeps1 no
           conda install python=${{ matrix.python-version }}
           conda info -a
@@ -97,11 +95,27 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y ccache
 
+      - name: Install Plumed 2 and run tests for MacOS
+        if: ${{ startsWith( matrix.os , 'macos') }}
+        run: |
+          git clone https://github.com/plumed/plumed2.git
+          cd plumed2
+          ./configure CXX="ccache $(which clang)" CC=$(which clang) --prefix="$HOME/opt" --enable-modules=annfunc
+          make -j 4
+          make install
+          source sourceme.sh
+          plumed -h
+          cd ..
+          python -c "import keras.backend"
+          sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
+          echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
+          KERAS_BACKEND=$KERAS_BACKEND pytest --cov=anncolvar tests/
+
       - name: Install Plumed 2 and run tests
         run: |
           git clone https://github.com/plumed/plumed2.git
           cd plumed2
-          ./configure CXX="ccache $(which $PLUMED_CXX)" CC=clang --prefix="$HOME/opt" --enable-modules=annfunc
+          ./configure CXX="ccache $(which $PLUMED_CXX)" CC=$(which $PLUMED_CC) --prefix="$HOME/opt" --enable-modules=annfunc
           make -j 4
           make install
           source sourceme.sh
