@@ -40,6 +40,7 @@ jobs:
           wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
 
       - name: Install Miniconda
+        shell: bash
         if: ${{ startsWith( matrix.os , 'ubuntu') }}
         run: |
           bash miniconda.sh -b -p $HOME/miniconda
@@ -51,6 +52,7 @@ jobs:
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
 
       - name: Setup conda for MacOS
+        shell: bash
         if: ${{ startsWith( matrix.os , 'macos') }}
         run: |
           /usr/bin/sudo chown -R runner:staff /usr/local/miniconda
@@ -60,6 +62,8 @@ jobs:
           conda install python=${{ matrix.python-version }}
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
+          conda init bash
+          source ~/.bashrc
           ${{ (matrix.python-version > '3.6.3' && 'conda activate test-environment') || 'activate test-environment' }}
 
       - name: Upgrade pip for python ${{ matrix.python-version }}
