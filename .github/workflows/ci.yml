@@ -102,5 +102,5 @@ jobs:
           python3 -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
-          KERAS_BACKEND=$KERAS_BACKEND pytest --cov=anncolvar tests/
+          KERAS_BACKEND=$KERAS_BACKEND python3 -m pytest --cov=anncolvar tests/
 
