@@ -68,8 +68,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip3 install pytest tensorflow
-          conda install numpy nose cython h5py theano tqdm pytest-cov
+          pip3 install pytest pytest-cov tensorflow
+          conda install numpy nose cython h5py theano tqdm
           conda install -c conda-forge mdtraj mkl mkl-service
           pip3 install -e .[tests]
 
