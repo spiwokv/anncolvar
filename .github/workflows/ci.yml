@@ -64,7 +64,7 @@ jobs:
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
           conda init bash
           source ~/.bashrc
-          ${{ (matrix.python-version > '3.6.3' && 'conda activate test-environment') || 'activate test-environment' }}
+          conda activate test-environment
 
       - name: Upgrade pip for python ${{ matrix.python-version }}
         run: |
