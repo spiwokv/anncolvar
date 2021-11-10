@@ -50,6 +50,8 @@ jobs:
           conda update -q conda
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
+          source ~/.bashrc
+          conda activate test-environment
 
       - name: Setup conda for MacOS
         shell: bash
@@ -62,14 +64,8 @@ jobs:
           conda install python=${{ matrix.python-version }}
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
-          conda init bash
           source ~/.bash_profile
           conda activate test-environment
-
-      - name: Upgrade pip for python ${{ matrix.python-version }}
-        run: |
-          python3 --version
-          python3 -m pip install --upgrade pip
 
       - name: Install dependencies
         run: |
