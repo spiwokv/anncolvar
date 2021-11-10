@@ -51,12 +51,12 @@ jobs:
           bash miniconda.sh -b -p $HOME/miniconda
           echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
           echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
-          /usr/share/miniconda/condabin/conda init --all
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
           source ~/.bashrc
+          conda init
           conda activate test-environment
 
       - name: Install conda for MacOS
