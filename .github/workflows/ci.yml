@@ -63,7 +63,7 @@ jobs:
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
           conda init bash
-          source ~/.bashrc
+          source ~/.bash_profile
           conda activate test-environment
 
       - name: Upgrade pip for python ${{ matrix.python-version }}
