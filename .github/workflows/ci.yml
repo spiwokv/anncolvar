@@ -50,14 +50,6 @@ jobs:
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
 
-      - name: Check gcc
-        if: ${{ startsWith( matrix.os , 'macos') }}
-        run: |
-          gcc -v
-          which gcc
-          which clang
-
-
       - name: Setup conda for MacOS
         if: ${{ startsWith( matrix.os , 'macos') }}
         run: |
@@ -97,12 +89,6 @@ jobs:
 #          sudo dpkg -i openmpi_1.10-3.deb
 #          popd
 
-      - name: Update Ubuntu packages and install ccache
-        if: ${{ startsWith( matrix.os , 'ubuntu') }}
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y ccache
-
       - name: Install Plumed 2 and run tests
         run: |
           git clone https://github.com/plumed/plumed2.git
@@ -113,7 +99,7 @@ jobs:
           source sourceme.sh
           plumed -h
           cd ..
-          python -c "import keras.backend"
+          python3 -c "import keras.backend"
           sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
           echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
           KERAS_BACKEND=$KERAS_BACKEND pytest --cov=anncolvar tests/
