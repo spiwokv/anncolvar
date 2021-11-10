@@ -16,8 +16,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ macos-latest ]
-        python-version: [ 3.6.3, 3.7 ]
+        os: [ ubuntu-18.04, ubuntu-latest, macos-latest ]
+        python-version: [ 3.6.3, 3.7, 3.8 ] # Python 3.6.0 has bug in pytest-cov, that´s why we use 3.6.3 version
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
@@ -38,6 +38,11 @@ jobs:
         if: contains( matrix.python-version, '3.7' )
         run: |
           wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
+
+      - name: Download Miniconda for ${{ matrix.os }} and python 3.8
+        if: contains( matrix.python-version, '3.8' )
+        run: |
+          wget https://repo.continuum.io/miniconda/Miniconda3-py38_4.10.3-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
 
       - name: Install Miniconda
         shell: bash
@@ -69,8 +74,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip3 install pytest pytest-cov tensorflow
-          conda install numpy nose cython h5py theano tqdm
+          conda install numpy nose cython h5py theano tqdm pytest pytest-cov tensorflow
           conda install -c conda-forge mdtraj mkl mkl-service
           pip3 install -e .[tests]
 
