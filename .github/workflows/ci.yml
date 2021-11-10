@@ -56,6 +56,7 @@ jobs:
           /usr/bin/sudo chown -R runner:staff /usr/local/miniconda
           bash miniconda.sh -b -p $HOME/miniconda
           /usr/local/miniconda/condabin/conda init --all
+          gcc -v
           sudo ln -s gcc gcc-4.2
           conda config --set always_yes yes --set changeps1 no
           conda install python=${{ matrix.python-version }}
