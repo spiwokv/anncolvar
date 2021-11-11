@@ -16,8 +16,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest ]
-        python-version: [ 3.6.3, 3.7 ] # Python 3.6.0 has bug in pytest-cov, that´s why we use 3.6.3 version
+        os: [ ubuntu-18.04, ubuntu-latest, macos-latest ]
+        python-version: [ 3.6.3, 3.7, 3.8 ] # Python 3.6.0 has bug in pytest-cov, that´s why we use 3.6.3 version
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
@@ -69,8 +69,13 @@ jobs:
           conda install python=${{ matrix.python-version }}
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
-          source ~/.bash_profile
-          conda activate test-environment
+
+      - name: Upgrade pip for Ubuntu and install tensorflow
+        if: ${{ startsWith( matrix.os , 'ubuntu') }}
+        run: |
+          python --version
+          python -m pip install --upgrade pip
+          pip install tensorflow
 
       - name: Install dependencies
         run: |
