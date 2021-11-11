@@ -65,14 +65,18 @@ jobs:
           source ~/.bash_profile
           conda activate test-environment
 
-      - name: Upgrade pip for Ubuntu and install tensorflow
+      - name: Install dependencies for Ubuntu
         if: ${{ startsWith( matrix.os , 'ubuntu') }}
         run: |
           python --version
           python -m pip install --upgrade pip
           pip install tensorflow
+          conda install numpy nose cython h5py theano tqdm pytest pytest-cov
+          conda install -c conda-forge mdtraj mkl mkl-service
+          pip install -e .[tests]
 
-      - name: Install dependencies
+      - name: Install dependencies for MacOS
+        if: ${{ startsWith( matrix.os , 'macos') }}
         run: |
           conda install numpy nose cython h5py theano tqdm pytest pytest-cov tensorflow
           conda install -c conda-forge mdtraj mkl mkl-service
