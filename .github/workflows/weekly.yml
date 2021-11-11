@@ -40,6 +40,7 @@ jobs:
         run: |
           wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
 
+# TODO: There are problems with conda env activation. With activated env, pip installations can be omitted probably
       - name: Install Miniconda for Ubuntu
         shell: bash
         if: ${{ startsWith( matrix.os , 'ubuntu') }}
@@ -51,9 +52,8 @@ jobs:
           conda update -q conda
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
-# TODO: There are problems with conda env activation. With activated env, pip installations can be omitted probably
 
-      - name: Install conda for MacOS
+      - name: Install Miniconda for MacOS
         shell: bash
         if: ${{ startsWith( matrix.os , 'macos') }}
         run: |
