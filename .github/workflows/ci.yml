@@ -68,9 +68,9 @@ jobs:
       - name: Upgrade pip for Ubuntu and install tensorflow
         if: ${{ startsWith( matrix.os , 'ubuntu') }}
         run: |
-          python --version
-          python -m pip install --upgrade pip
-          pip install tensorflow
+          python3 --version
+          python3 -m pip install --upgrade pip
+          pip3 install tensorflow
 
       - name: Install dependencies
         run: |
