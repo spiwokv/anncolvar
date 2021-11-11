@@ -50,7 +50,7 @@ jobs:
           conda update -q conda
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
-# TODO: There are problems with conda env activation. With activated env, pip installations can be ommited probably
+# TODO: There are problems with conda env activation. With activated env, pip installations can be omitted probably
 
       - name: Install conda for MacOS
         shell: bash
