@@ -1,4 +1,4 @@
-name: Weekly Monday 10 AM builds
+name: Weekly build
 on:
   schedule:
    - cron: "0 10 * * 1"
