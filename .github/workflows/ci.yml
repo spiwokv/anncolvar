@@ -50,6 +50,7 @@ jobs:
           conda update -q conda
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
+# TODO: There are problems with conda env activation. With activated env, pip installations can be ommited probably
 
       - name: Install conda for MacOS
         shell: bash
@@ -62,8 +63,6 @@ jobs:
           conda install python=${{ matrix.python-version }}
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
-          source ~/.bash_profile
-          conda activate test-environment
 
       - name: Install dependencies for Ubuntu
         if: ${{ startsWith( matrix.os , 'ubuntu') }}
@@ -80,7 +79,8 @@ jobs:
         run: |
           python3 --version
           python3 -m pip install --upgrade pip
-          conda install numpy nose cython h5py theano tqdm pytest pytest-cov tensorflow
+          pip3 install pytest pytest-cov tensorflow
+          conda install numpy nose cython h5py theano tqdm
           conda install -c conda-forge mdtraj mkl mkl-service
           pip3 install -e .[tests]
 
