@@ -198,12 +198,12 @@ METAD).
     :target: https://anaconda.org/spiwokv/anncolvar
     :alt: Latest version released on Anaconda Cloud
 
-.. |BuildStatus| image:: https://github.com/mareskav/anncolvar/actions/workflows/ci.yml/badge.svg
+.. |LastBuildStatus| image:: https://github.com/mareskav/anncolvar/actions/workflows/ci.yml/badge.svg
     :target: https://github.com/mareskav/anncolvar/actions/workflows/ci.yml/badge.svg
     :alt: Build status of the master branch on Mac/Linux at Github Actions
 
-.. |BuildStatus| image:: https://github.com/mareskav/anncolvar/actions/workflows/weekly.yml/badge.svg
-    :target: https://github.com/mareskav/anncolvar/actions/workflows/ci.yml/badge.svg
+.. |WeeklyBuildStatus| image:: https://github.com/mareskav/anncolvar/actions/workflows/weekly.yml/badge.svg
+    :target: https://github.com/mareskav/anncolvar/actions/workflows/weekly.yml/badge.svg
     :alt: Weekly build status of the master branch on Mac/Linux at Github Actions
 
 .. |codecov| image:: https://codecov.io/gh/spiwokv/anncolvar/branch/master/graph/badge.svg
