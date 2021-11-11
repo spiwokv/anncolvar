@@ -5,7 +5,7 @@ libnames = [('mdtraj', 'md'), ('numpy', 'np'), ('keras', 'krs'), ('tensorflow', 
 for (name, short) in libnames:
   try:
     lib = __import__(name)
-  except ImportError as e:
+  except ImportError:
     print("Library %s cannot be loaded, exiting" % name)
     exit(0)
   else:
