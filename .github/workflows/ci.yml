@@ -50,8 +50,6 @@ jobs:
           conda update -q conda
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
-          source ~/.bashrc
-          source /usr/share/miniconda/bin/activate
 
       - name: Install conda for MacOS
         shell: bash
@@ -64,13 +62,15 @@ jobs:
           conda install python=${{ matrix.python-version }}
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
+          source ~/.bash_profile
+          conda activate test-environment
 
       - name: Upgrade pip for Ubuntu and install tensorflow
         if: ${{ startsWith( matrix.os , 'ubuntu') }}
         run: |
-          python3 --version
-          python3 -m pip install --upgrade pip
-          pip3 install tensorflow
+          python --version
+          python -m pip install --upgrade pip
+          pip install tensorflow
 
       - name: Install dependencies
         run: |
