@@ -1,4 +1,4 @@
-|PyPI| |Anaconda| |BuildStatus| |codecov| |lgtm| |lgtmpy|
+|PyPI| |Anaconda| |LastBuildStatus| |WeeklyBuildStatus|  |codecov| |lgtm| |lgtmpy|
 |DOI| |nest|
 
 Read more in 
