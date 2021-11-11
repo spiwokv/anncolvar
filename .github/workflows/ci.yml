@@ -56,7 +56,7 @@ jobs:
           conda update -q conda
           conda info -a
           conda create -q -n test-environment python=${{ matrix.python-version }} pandas
-          source ~/.profile
+          source ~/.bashrc
           conda activate test-environment
 
       - name: Install conda for MacOS
