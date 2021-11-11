@@ -11,6 +11,8 @@ anncolvar
 News
 ====
 
+August 2020: Support for Python 2.7 terminated, use Python 3.
+
 Current master vsersion makes it possible to use ANN module of recent master version of Plumed.
 
 Syntax
@@ -200,7 +202,7 @@ METAD).
     :target: https://github.com/mareskav/anncolvar/actions/workflows/ci.yml/badge.svg
     :alt: Build status of the master branch on Mac/Linux at Travis-CI
 
-.. |codecov| image:: https://github.com/github/docs/actions/workflows/ci.yml/badge.svg
+.. |codecov| image:: https://codecov.io/gh/spiwokv/anncolvar/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/spiwokv/anncolvar/
     :alt: Code coverage
 
