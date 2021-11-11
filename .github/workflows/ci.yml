@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-18.04, ubuntu-latest, macos-latest ]
-        python-version: [ 3.6.3, 3.7, 3.8 ] # Python 3.6.0 has bug in pytest-cov, that´s why we use 3.6.3 version
+        python-version: [ 3.6.3, 3.7 ] # Python 3.6.0 has bug in pytest-cov, that´s why we use 3.6.3 version
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
@@ -38,11 +38,6 @@ jobs:
         if: contains( matrix.python-version, '3.7' )
         run: |
           wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
-
-      - name: Download Miniconda for ${{ matrix.os }} and python 3.8
-        if: contains( matrix.python-version, '3.8' )
-        run: |
-          wget https://repo.continuum.io/miniconda/Miniconda3-py38_4.10.3-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
 
       - name: Install Miniconda for Ubuntu
         shell: bash
