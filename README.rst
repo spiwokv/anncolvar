@@ -200,7 +200,11 @@ METAD).
 
 .. |BuildStatus| image:: https://github.com/mareskav/anncolvar/actions/workflows/ci.yml/badge.svg
     :target: https://github.com/mareskav/anncolvar/actions/workflows/ci.yml/badge.svg
-    :alt: Build status of the master branch on Mac/Linux at Travis-CI
+    :alt: Build status of the master branch on Mac/Linux at Github Actions
+
+.. |BuildStatus| image:: https://github.com/mareskav/anncolvar/actions/workflows/weekly.yml/badge.svg
+    :target: https://github.com/mareskav/anncolvar/actions/workflows/ci.yml/badge.svg
+    :alt: Weekly build status of the master branch on Mac/Linux at Github Actions
 
 .. |codecov| image:: https://codecov.io/gh/spiwokv/anncolvar/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/spiwokv/anncolvar/
