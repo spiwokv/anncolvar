@@ -78,9 +78,11 @@ jobs:
       - name: Install dependencies for MacOS
         if: ${{ startsWith( matrix.os , 'macos') }}
         run: |
+          python3 --version
+          python3 -m pip install --upgrade pip
           conda install numpy nose cython h5py theano tqdm pytest pytest-cov tensorflow
           conda install -c conda-forge mdtraj mkl mkl-service
-          pip install -e .[tests]
+          pip3 install -e .[tests]
 
 #        CNTK is only maintained since 2019. CNTK 2.7 is the last release. More info: https://github.com/microsoft/CNTK
 #        It´s is still possible to run CNTK, but with exact wheel version for every matrix.python-version
