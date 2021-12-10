@@ -617,13 +617,13 @@ CMLP ...
 LABEL=ann
 """)
       ofile.write("ATOMS=" + ",".join(map(str,atoms[:trajsize[1]])) + "\n")
-      ofile.write(f"RESCALE {1.0/maxbox}\n")
+      ofile.write(f"RESCALE={1.0/maxbox}\n")
   
       lsizes = [3*trajsize[1],layer1,layer2,layer3]
-      ofile.write(f"SIZES=" + ",".join(map(str,lsizes[:layers+1])) + "\n")
+      ofile.write(f"SIZES=" + ",".join(map(str,lsizes[:layers+1])) + ",1\n")
 
       afuns = [ actfun1, actfun2, actfun3 ]
-      ofile.write(f"ACTIVATIONS=" + ",".join(afuns[:layers]) + "\n")
+      ofile.write(f"ACTIVATIONS=" + ",".join(afuns[:layers]).upper() + ",LINEAR\n")
   
       for layer in range(layers):
         ofile.write(f"WEIGHTS{layer}=" + ",".join([
