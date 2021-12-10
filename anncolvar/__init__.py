@@ -613,7 +613,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
     with open(fannfile, "w") as ofile:
       ofile.write(f"""WHOLEMOLECULES ENTITY0=1-{np.max(atoms)}
 FIT_TO_TEMPLATE STRIDE=1 REFERENCE={intopname} TYPE=OPTIMAL
-CMLP...
+CMLP ...
 LABEL=ann
 """)
       ofile.write("ATOMS=" + ",".join(map(str,atoms[:trajsize[1]])) + "\n")
@@ -644,7 +644,7 @@ LABEL=ann
           for i in range(lsizes[layer+1])
         ]) + "\n")
       ofile.write(f"BIASES{layers}={codecvs.layers[layers+1].get_weights()[1][0]}\n")
-      ofile.write("...CMLP\n")
+      ofile.write("... CMLP\n")
       ofile.write("PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n")
   
   return codecvs, np.corrcoef(cvs,coded_cvs[:,0])[0,1]
