@@ -17,7 +17,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
                           shuffle=1, nofit=0, layers=1, layer1=256, layer2=256, layer3=256,
                           actfun1='sigmoid', actfun2='sigmoid', actfun3='sigmoid',
                           optim='adam', loss='mean_squared_error', epochs=100, batch=0,
-                          ofilename='', modelfile='', plumedfile='', plumedfile2=''):
+                          ofilename='', modelfile='', plumedfile='', plumedfile2='', fannfile=''):
   try:
     print("Loading trajectory")
     refpdb = md.load_pdb(intopname)
@@ -603,5 +603,49 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       toprint = "PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n"
       ofile.write(toprint)                  
     ofile.close()
+
+  if fannfile != '':
+    print("Writing Plumed + CMLP input into %s" % fannfile)
+    print("")
+    traj = md.load(infilename, top=intopname)
+    table, bonds = traj.topology.to_dataframe()
+    atoms = table['serial'][:]
+    with open(fannfile, "w") as ofile:
+      ofile.write(f"""WHOLEMOLECULES ENTITY0=1-{np.max(atoms)}
+FIT_TO_TEMPLATE STRIDE=1 REFERENCE={intopname} TYPE=OPTIMAL
+CMLP...
+LABEL=ann
+""")
+      ofile.write("ATOMS=" + ",".join(map(str,atoms[:trajsize[1]])) + "\n")
+      ofile.write(f"RESCALE {1.0/maxbox}\n")
+  
+      lsizes = [3*trajsize[1],layer1,layer2,layer3]
+      ofile.write(f"SIZES=" + ",".join(map(str,lsizes[:layers+1])) + "\n")
+
+      afuns = [ actfun1, actfun2, actfun3 ]
+      ofile.write(f"ACTIVATIONS=" + ",".join(afuns[:layers]) + "\n")
+  
+      for layer in range(layers):
+        ofile.write(f"WEIGHTS{layer}=" + ",".join([
+          ",".join([
+              str(codecvs.layers[layer+1].get_weights()[0][j,i])
+              for j in range(lsizes[layer])
+          ])
+          for i in range(lsizes[layer+1])
+        ]) + "\n")
+      ofile.write(f"WEIGHTS{layers}=" + ",".join([
+        str(codecvs.layers[layers+1].get_weights()[0][j,0])
+        for j in range(lsizes[layers])
+      ]) + "\n")
+  
+      for layer in range(layers):
+        ofile.write(f"BIASES{layer}=" + ",".join([
+          str(codecvs.layers[layer+1].get_weights()[1][i])
+          for i in range(lsizes[layer+1])
+        ]) + "\n")
+      ofile.write(f"BIASES{layers}={codecvs.layers[layers+1].get_weights()[1][0]}\n")
+      ofile.write("...CMLP\n")
+      ofile.write("PRINT ARG=ann.node-0 STRIDE=100 FILE=COLVAR\n")
+  
   return codecvs, np.corrcoef(cvs,coded_cvs[:,0])[0,1]
 
