@@ -188,7 +188,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       np.save(file=modelfile+"_3.npy", arr=codecvs.layers[3].get_weights())
       np.save(file=modelfile+"_4.npy", arr=codecvs.layers[4].get_weights())
   
-  if plumedfile != '':
+  if plumedfile:
     print("Writing Plumed <=2.5.3 input into %s" % plumedfile)
     print("")
     traj = md.load(infilename, top=intopname)
@@ -444,7 +444,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       ofile.write(toprint)
     ofile.close()
     
-  if plumedfile2 != '':
+  if plumedfile2:
     print("Writing Plumed >= 2.6 input into %s" % plumedfile2)
     print("")
     traj = md.load(infilename, top=intopname)
@@ -604,7 +604,7 @@ def anncollectivevariable(infilename='', intopname='', colvarname='', column=2,
       ofile.write(toprint)                  
     ofile.close()
 
-  if fannfile != '':
+  if fannfile:
     print("Writing Plumed + CMLP input into %s" % fannfile)
     print("")
     traj = md.load(infilename, top=intopname)
