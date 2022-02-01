@@ -85,11 +85,14 @@ help='Output file with original and approximated collective variables (txt, defa
 parser.add_argument('-model', dest='modelfile', default='',
 help='Prefix for output model files (experimental, default = no output)')
 
-parser.add_argument('-plumed', dest='plumedfile', default='plumed.dat',
-help='Output file for Plumed (default = plumed.dat)')
+parser.add_argument('-plumed', dest='plumedfile', 
+help='Output file for Plumed ')
 
-parser.add_argument('-plumed2', dest='plumedfile2', default='plumed2.dat',
-help='Output file for Plumed with ANN module (default = plumed2.dat)')
+parser.add_argument('-plumed2', dest='plumedfile2',
+help='Output file for Plumed with ANN module ')
+
+parser.add_argument('-plumed-cmlp', dest='fannfile',
+help='Output file for Plumed with CMLP module ')
 
 args = parser.parse_args()
 
@@ -168,11 +171,15 @@ else:
 modelfile = args.modelfile
 plumedfile = args.plumedfile
 plumedfile2 = args.plumedfile2
-if plumedfile[-4:] != '.dat':
-  plumedfile = plumedfile + '.dat'
-if plumedfile2[-4:] != '.dat':
-  plumedfile2 = plumedfile2 + '.dat'
-if plumedfile2 !="":
+fannfile = args.fannfile
+if plumedfile and plumedfile[-4:] != '.dat':
+  plumedfile += '.dat'
+if plumedfile2 and plumedfile2[-4:] != '.dat':
+  plumedfile2 += '.dat'
+if fannfile and fannfile[-4:] != '.dat':
+  fannfile += '.dat'
+
+if plumedfile2:
   if layers == 1:
     if actfun1 !="tanh":
       print("ERROR: only tanh and linear functions are currently supported in ANN module of Plumed")
@@ -185,11 +192,20 @@ if plumedfile2 !="":
     if actfun1 !="tanh" or actfun2 !="tanh" or actfun3 !="tanh":
       print("ERROR: only tanh and linear functions are currently supported in ANN module of Plumed")
       exit(0)
+
+if fannfile:
+  for layer,actfun in enumerate([actfun1,actfun2,actfun3]):
+    if layer >= layers:
+      break
+    if actfun not in ['tanh','linear','sigmoid','relu']:
+      print("ERROR: only tanh, linear, sigmoid, and relu are currently supported in CMLP module of Plumed")
+      exit(0)
+
 anncolvar.anncollectivevariable(infilename, intopname, colvarname, column,
                                 boxx, boxy, boxz, atestset, shuffle, nofit,
                                 layers, layer1, layer2, layer3,
                                 actfun1, actfun2, actfun3,
                                 optim, loss, epochs, batch,
-                                ofilename, modelfile, plumedfile, plumedfile2)
+                                ofilename, modelfile, plumedfile, plumedfile2, fannfile)
 
-
+ 
