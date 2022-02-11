@@ -1,4 +1,4 @@
-|PyPI| |Anaconda| |BuildStatus| |codecov| |lgtm| |lgtmpy|
+|PyPI| |Anaconda| |BuildStatus| |WeeklyBuildStatus|  |codecov| |lgtm| |lgtmpy|
 |DOI| |nest|
 
 Read more in 
@@ -114,7 +114,7 @@ CNTK. For this follow one of these links:
 
 - TensorFlow_
 - Theano_
-- CNTK_
+- CNTK_ (CNTK 2.7 is the last release since 2019)
 
 Install numpy and cython by PIP::
 
@@ -198,9 +198,13 @@ METAD).
     :target: https://anaconda.org/spiwokv/anncolvar
     :alt: Latest version released on Anaconda Cloud
 
-.. |BuildStatus| image:: https://travis-ci.com/spiwokv/anncolvar.svg?branch=master
-    :target: http://travis-ci.com/spiwokv/anncolvar/
-    :alt: Build status of the master branch on Mac/Linux at Travis-CI
+.. |BuildStatus| image:: https://github.com/spiwokv/anncolvar/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/spiwokv/anncolvar/actions/workflows/ci.yml/badge.svg
+    :alt: Build status of the master branch on Mac/Linux at Github Actions
+
+.. |WeeklyBuildStatus| image:: https://github.com/spiwokv/anncolvar/actions/workflows/weekly.yml/badge.svg
+    :target: https://github.com/spiwokv/anncolvar/actions/workflows/weekly.yml/badge.svg
+    :alt: Weekly Monday 10 AM build status of the master branch on Mac/Linux at Github Actions
 
 .. |codecov| image:: https://codecov.io/gh/spiwokv/anncolvar/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/spiwokv/anncolvar/

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-libnames = [('mdtraj', 'md'), ('numpy', 'np'), ('keras', 'krs'), ('argparse', 'arg'), ('datetime', 'dt'), ('sys', 'sys')]
+libnames = [('mdtraj', 'md'), ('numpy', 'np'), ('keras', 'krs'), ('tensorflow', 'tf'), ('argparse', 'arg'), ('datetime', 'dt'), ('sys', 'sys')]
 
 for (name, short) in libnames:
   try:
     lib = __import__(name)
   except ImportError:
-    print("Library %s is cannot be loaded, exiting" % name)
+    print("Library %s cannot be loaded, exiting" % name)
     exit(0)
   else:
     globals()[short] = lib

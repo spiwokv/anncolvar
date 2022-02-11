@@ -1,0 +1,117 @@
+name: Build
+
+on: [ push, pull_request ]
+
+env:
+  CORE_CHANGED: false
+  APP_CHANGED: false
+  MKL_THREADING_LAYER: GNU
+  PLUMED_CC: gcc
+  PLUMED_CXX: g++
+  CUDA_VISIBLE_DEVICES: -1
+
+jobs:
+  install-anncolvar:
+    name: ${{ matrix.os }}, python ${{ matrix.python-version }}, ${{ matrix.keras-backend }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-18.04, ubuntu-latest, macos-latest ]
+        python-version: [ 3.6.3, 3.7 ] # Python 3.6.0 has bug in pytest-cov, that´s why we use 3.6.3 version
+        keras-backend:
+          - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+          - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
+#          - KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          env: ${{ matrix.keras-backend }}
+
+      - name: Download Miniconda for ${{ matrix.os }} and python 3.6.3
+        if: contains( matrix.python-version, '3.6.3' )
+        run: |
+          wget https://repo.continuum.io/miniconda/Miniconda3-4.3.31-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
+
+      - name: Download Miniconda for ${{ matrix.os }} and python 3.7
+        if: contains( matrix.python-version, '3.7' )
+        run: |
+          wget https://repo.continuum.io/miniconda/Miniconda3-py37_4.10.3-${{ startsWith(matrix.os,  'ubuntu' ) && 'Linux' || 'MacOSX' }}-x86_64.sh -O miniconda.sh
+
+# TODO: There are problems with conda env activation. With activated env, pip installations can be omitted probably
+      - name: Install Miniconda for Ubuntu
+        shell: bash
+        if: ${{ startsWith( matrix.os , 'ubuntu') }}
+        run: |
+          bash miniconda.sh -b -p $HOME/miniconda
+          echo "$HOME/miniconda/bin:$PATH" >> $GITHUB_PATH
+          echo "$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH" >> $GITHUB_PATH
+          conda config --set always_yes yes --set changeps1 no
+          conda update -q conda
+          conda info -a
+          conda create -q -n test-environment python=${{ matrix.python-version }} pandas
+
+      - name: Install Miniconda for MacOS
+        shell: bash
+        if: ${{ startsWith( matrix.os , 'macos') }}
+        run: |
+          /usr/bin/sudo chown -R runner:staff /usr/local/miniconda
+          bash miniconda.sh -b -p $HOME/miniconda
+          /usr/local/miniconda/condabin/conda init --all
+          conda config --set always_yes yes --set changeps1 no
+          conda install python=${{ matrix.python-version }}
+          conda info -a
+          conda create -q -n test-environment python=${{ matrix.python-version }} pandas
+
+      - name: Install dependencies for Ubuntu
+        if: ${{ startsWith( matrix.os , 'ubuntu') }}
+        run: |
+          python --version
+          python -m pip install --upgrade pip
+          pip install tensorflow
+          conda install numpy nose cython h5py theano tqdm pytest pytest-cov
+          conda install -c conda-forge mdtraj mkl mkl-service
+          pip install -e .[tests]
+
+      - name: Install dependencies for MacOS
+        if: ${{ startsWith( matrix.os , 'macos') }}
+        run: |
+          python3 --version
+          python3 -m pip install --upgrade pip
+          pip3 install pytest pytest-cov tensorflow
+          conda install numpy nose cython h5py theano tqdm
+          conda install -c conda-forge mdtraj mkl mkl-service
+          pip3 install -e .[tests]
+
+#        CNTK is only maintained since 2019. CNTK 2.7 is the last release. More info: https://github.com/microsoft/CNTK
+#        It´s is still possible to run CNTK, but with exact wheel version for every matrix.python-version
+#      - name: Install CNTK and configure MPI
+#        if: contains( matrix.keras-backend, 'KERAS_BACKEND=cntk PYTHONWARNINGS=ignore CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"' )
+#        run: |
+#          python -m pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.7.post1-cp36-cp36m-linux_x86_64.whl
+#          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/backend/"* ]] || [[ "$entry" == "keras/engine/"* ]] || [[ "$entry" == "keras/layers/"* ]]; then export CORE_CHANGED=True; fi; done
+#          for entry in `git diff --name-only HEAD~1`; do if [[ "$entry" == "keras/applications/"* ]]; then export APP_CHANGED=True; fi; done
+#          rm -rf ~/mpi
+#          mkdir ~/mpi
+#          pushd ~/mpi
+#          wget http://cntk.ai/PythonWheel/ForKeras/depends/openmpi_1.10-3.zip
+#          unzip ./openmpi_1.10-3.zip
+#          sudo dpkg -i openmpi_1.10-3.deb
+#          popd
+
+      - name: Install Plumed 2 and run tests
+        run: |
+          git clone https://github.com/plumed/plumed2.git
+          cd plumed2
+          ./configure CXX=$(which $PLUMED_CXX) CC=$(which $PLUMED_CC) --prefix="$HOME/opt" --enable-modules=annfunc
+          make -j 4
+          make install
+          source sourceme.sh
+          plumed -h
+          cd ..
+          python3 -c "import keras.backend"
+          sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
+          echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
+          KERAS_BACKEND=$KERAS_BACKEND pytest --cov=anncolvar tests/
+
