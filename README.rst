@@ -199,11 +199,11 @@ METAD).
     :alt: Latest version released on Anaconda Cloud
 
 .. |BuildStatus| image:: https://github.com/spiwokv/anncolvar/actions/workflows/ci.yml/badge.svg
-    :target: https://github.com/spiwokv/anncolvar/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/spiwokv/anncolvar/actions
     :alt: Build status of the master branch on Mac/Linux at Github Actions
 
 .. |WeeklyBuildStatus| image:: https://github.com/spiwokv/anncolvar/actions/workflows/weekly.yml/badge.svg
-    :target: https://github.com/spiwokv/anncolvar/actions/workflows/weekly.yml/badge.svg
+    :target: https://github.com/spiwokv/anncolvar/actions
     :alt: Weekly Monday 10 AM build status of the master branch on Mac/Linux at Github Actions
 
 .. |codecov| image:: https://codecov.io/gh/spiwokv/anncolvar/branch/master/graph/badge.svg
