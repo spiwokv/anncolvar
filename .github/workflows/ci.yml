@@ -16,9 +16,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-#        os: [ ubuntu-18.04, ubuntu-latest, macos-latest ]
-        os: [ ubuntu-18.04, ubuntu-latest ]
-        python-version: [ 3.6.3, 3.7 ] # Python 3.6.0 has bug in pytest-cov, that´s why we use 3.6.3 version
+        os: [ ubuntu-18.04, ubuntu-latest, macos-latest ]
+        python-version: [ 3.8, 3.9 ]
         keras-backend:
           - KERAS_BACKEND=tensorflow CONFIG_FLAGS="--enable-debug --enable-debug-glibcxx"
           - KERAS_BACKEND=theano THEANO_FLAGS=optimizer=fast_compile CONFIG_FLAGS="--enable-debug"
